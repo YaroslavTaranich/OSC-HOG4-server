@@ -1,0 +1,19 @@
+{
+  "name": "hog-osc-backend",
+  "version": "1.0.0",
+  "description": "OSC ↔ WebSocket bridge for Road Hog (Hog OS) lighting console",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "NODE_ENV=development node src/server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "osc": "^2.4.3",
+    "ws": "^8.18.0"
+  }
+}
+
+
+
