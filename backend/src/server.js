@@ -3,8 +3,8 @@ import osc from 'osc';
 import { WebSocketServer } from 'ws';
 
 const WS_PORT = parseInt(process.env.WS_PORT || '8080', 10);
-const HOG_OSC_HOST = process.env.HOG_OSC_HOST || '127.0.0.1';
-const HOG_OSC_PORT = parseInt(process.env.HOG_OSC_PORT || '6600', 10);
+const HOG_OSC_HOST = process.env.HOG_OSC_HOST || '192.168.1.10';
+const HOG_OSC_PORT = parseInt(process.env.HOG_OSC_PORT || '7001', 10);
 
 // Simple logger
 function log(...args) {
@@ -103,13 +103,11 @@ function handleClientMessage(ws, rawData) {
       break;
     }
     case 'button': {
-      // 12 programmable buttons mapped to some OSC addresses.
-      // Here we define a simple mapping that can be adjusted later.
+
       const id = Number(data.id);
       if (!Number.isFinite(id)) return;
 
-      // Example mapping: /hog/control/button/<ID>
-      const address = `/hog/control/button/${id}`;
+      const address = `/hog/playback/button/${id}/go`;
       sendOscMessage(address);
       break;
     }

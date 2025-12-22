@@ -10,6 +10,8 @@ body {
   background: #05070a;
   color: #f5f7fb;
   -webkit-font-smoothing: antialiased;
+  max-height: 100vh;
+  overflow: scroll;
 }
 
 button {
@@ -118,16 +120,16 @@ button {
 }
 
 .btn--secondary {
-  background: linear-gradient(145deg, #020617, #020617);
+  background: linear-gradient(145deg, #020617, #363943);
   border: 1px solid #1f2937;
 }
 
 .btn--accent {
-  background: radial-gradient(circle at top, #22c55e, #15803d);
+  background: radial-gradient(circle at top, #1ea04e, #075122);
 }
 
 .btn--danger {
-  background: radial-gradient(circle at top, #ef4444, #b91c1c);
+  background: radial-gradient(circle at top, #5f1e1e, #4a0505);
 }
 
 .btn--large {
@@ -167,7 +169,6 @@ button {
   border-radius: 0.75rem;
   background: transparent;
   border: none;
-  touch-action: none;
   height: 100%;
 }
 
@@ -188,7 +189,6 @@ button {
   border: 1px solid #1f2937;
   box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
   overflow: hidden;
-  touch-action: none;
 }
 
 .encoder-fader__centerline {
@@ -212,7 +212,6 @@ button {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(56, 189, 248, 0.25);
   top: 50%;
   transform: translateY(-50%);
-  pointer-events: none;
 }
 
 .encoder-label {
@@ -351,7 +350,7 @@ button {
 .playback-faders {
   display: flex;
   flex-direction: row;
-  gap: 25px;
+  gap: 10px;
   overflow-x: auto;
   padding-bottom: 0.3rem;
 }
@@ -442,7 +441,6 @@ button {
   border: 1px solid #1f2937;
   box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
   overflow: hidden;
-  touch-action: none;
 }
 
 .playback-fader__thumb {
@@ -476,6 +474,23 @@ button {
     font-size: 0.8rem;
   }
 
+  /* Keep keypad buttons desktop-sized on mobile */
+  .keypad .playback-square {
+    width: 80px;
+    height: 80px;
+    font-size: 1rem;
+  }
+
+  .keypad .playback-square--double {
+    width: 160px;
+  }
+
+   /* Make Highlight / Navigation buttons double-width on mobile */
+  .section-highlight .playback-square--double,
+  .section-nav .playback-square--double {
+    width: 112px;
+  }
+
   .playback-slider-wrapper {
     width: 56px;
     height: 240px;
@@ -490,7 +505,7 @@ button {
   }
 
   .playback-card {
-    min-width: 120px;
+    min-width: 70px;
   }
 
   .section-keypad .keypad-block {

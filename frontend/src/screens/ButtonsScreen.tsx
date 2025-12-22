@@ -21,7 +21,6 @@ export const ButtonsScreen: React.FC<ButtonsScreenProps> = ({ send }) => {
               key={id}
               className="btn btn--primary btn--tall"
               onClick={() => handlePress(id)}
-              onTouchStart={() => handlePress(id)}
             >
               BTN {id}
             </button>

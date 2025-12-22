@@ -34,7 +34,7 @@ export const ProgrammerScreen: React.FC<ProgrammerScreenProps> = ({ send }) => {
     <div className="screen screen--programmer">
       <section className="screen-section section-encoders">
         <div className="section-title">Encoders</div>
-        <EncoderStrip count={4} onChange={handleEncoder} />
+      <EncoderStrip count={4} onChange={handleEncoder} />
       </section>
 
       <section className="screen-section section-params">
@@ -45,7 +45,6 @@ export const ProgrammerScreen: React.FC<ProgrammerScreenProps> = ({ send }) => {
               key={k}
               className="btn btn--primary playback-square"
               onClick={() => handleKey(k)}
-              onTouchStart={() => handleKey(k)}
             >
               {k}
             </button>
@@ -61,7 +60,6 @@ export const ProgrammerScreen: React.FC<ProgrammerScreenProps> = ({ send }) => {
               key={item.key}
               className="btn btn--primary playback-square"
               onClick={() => handleKey(item.key)}
-              onTouchStart={() => handleKey(item.key)}
             >
               {item.label}
             </button>
@@ -77,7 +75,6 @@ export const ProgrammerScreen: React.FC<ProgrammerScreenProps> = ({ send }) => {
               key={k}
               className="btn btn--primary playback-square"
               onClick={() => handleKey(k)}
-              onTouchStart={() => handleKey(k)}
             >
               {k}
             </button>
@@ -93,7 +90,6 @@ export const ProgrammerScreen: React.FC<ProgrammerScreenProps> = ({ send }) => {
               key={k}
               className="btn btn--primary playback-square"
               onClick={() => handleKey(k)}
-              onTouchStart={() => handleKey(k)}
             >
               {k}
             </button>
@@ -114,7 +110,6 @@ export const ProgrammerScreen: React.FC<ProgrammerScreenProps> = ({ send }) => {
               key={k}
               className="btn btn--primary playback-square playback-square--double"
               onClick={() => handleKey(k)}
-              onTouchStart={() => handleKey(k)}
             >
               {k}
             </button>
@@ -130,7 +125,6 @@ export const ProgrammerScreen: React.FC<ProgrammerScreenProps> = ({ send }) => {
               key={k}
               className="btn btn--primary playback-square playback-square--double"
               onClick={() => handleKey(k)}
-              onTouchStart={() => handleKey(k)}
             >
               {k}
             </button>

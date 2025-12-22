@@ -62,7 +62,6 @@ export const Keypad: React.FC<KeypadProps> = ({ onKeyPress }) => {
               }`}
               style={span === 2 ? { gridColumn: 'span 2' } : undefined}
               onClick={() => handle(key)}
-              onTouchStart={() => handle(key)}
             >
               {label}
             </button>
