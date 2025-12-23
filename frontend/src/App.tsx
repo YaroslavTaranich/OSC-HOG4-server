@@ -1,22 +1,18 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
+import { Navigate, NavLink, Route, Routes } from 'react-router-dom';
 import { HogWebSocketProvider, useHogWebSocket } from './hooks/useHogWebSocket';
 import { ProgrammerScreen } from './screens/ProgrammerScreen';
 import { PlaybacksScreen } from './screens/PlaybacksScreen';
 import { ButtonsScreen } from './screens/ButtonsScreen';
+import { SettingsScreen } from './screens/SettingsScreen';
 
-type Screen = 'programmer' | 'playbacks' | 'buttons';
+const AppLayout: React.FC = () => {
+  const { status } = useHogWebSocket();
 
-export const App: React.FC = () => {
-  const [screen, setScreen] = useState<Screen>('programmer');
-
-  const wsUrl = useMemo(() => {
-    const loc = window.location;
-    const protocol = loc.protocol === 'https:' ? 'wss:' : 'ws:';
-    return `${protocol}//${loc.hostname}:8080`;
-  }, []);
+  const makeTabClassName = ({ isActive }: { isActive: boolean }) =>
+    `tab-btn ${isActive ? 'tab-btn--active' : ''}`;
 
   return (
-    <HogWebSocketProvider url={wsUrl}>
     <div className="app-root">
       <header className="app-header">
         <div className="app-title">Hog OSC Remote</div>
@@ -24,36 +20,50 @@ export const App: React.FC = () => {
       </header>
 
       <nav className="app-tabs">
-        <button
-          className={`tab-btn ${screen === 'programmer' ? 'tab-btn--active' : ''}`}
-          onClick={() => setScreen('programmer')}
-        >
+        <NavLink to="/programmer" className={makeTabClassName}>
           Programmer
-        </button>
-        <button
-          className={`tab-btn ${screen === 'playbacks' ? 'tab-btn--active' : ''}`}
-          onClick={() => setScreen('playbacks')}
-        >
+        </NavLink>
+        <NavLink to="/playbacks" className={makeTabClassName}>
           Playbacks
-        </button>
-        <button
-          className={`tab-btn ${screen === 'buttons' ? 'tab-btn--active' : ''}`}
-          onClick={() => setScreen('buttons')}
-        >
+        </NavLink>
+        <NavLink to="/buttons" className={makeTabClassName}>
           Controls
-        </button>
+        </NavLink>
+        <NavLink to="/settings" className={makeTabClassName}>
+          Settings
+        </NavLink>
       </nav>
 
       <main className="app-main">
-        {screen === 'programmer' && <ProgrammerScreen />}
-        {screen === 'playbacks' && <PlaybacksScreen />}
-        {screen === 'buttons' && <ButtonsScreen />}
+        <Routes>
+          <Route path="/" element={<ProgrammerScreen />} />
+          <Route path="/programmer" element={<ProgrammerScreen />} />
+          <Route path="/playbacks" element={<PlaybacksScreen />} />
+          <Route path="/buttons" element={<ButtonsScreen />} />
+          <Route path="/settings" element={<SettingsScreen />} />
+          <Route path="*" element={<Navigate to={'/'} />} />
+        </Routes>
       </main>
     </div>
-    </HogWebSocketProvider>
-
   );
 };
 
+export const App: React.FC = () => {
+  const wsUrl = useMemo(() => {
+    if (typeof window === 'undefined') {
+      return 'ws://localhost:8080';
+    }
+    const loc = window.location;
+    const protocol = loc.protocol === 'https:' ? 'wss:' : 'ws:';
+    // WebSocket сервер обычно работает на том же хосте, что и фронт, на порту WS_PORT (по умолчанию 8080)
+    return `${protocol}//${loc.hostname}:8080`;
+  }, []);
+
+  return (
+    <HogWebSocketProvider url={wsUrl}>
+      <AppLayout />
+    </HogWebSocketProvider>
+  );
+};
 
 

@@ -3,8 +3,8 @@ import osc from 'osc';
 import { WebSocketServer } from 'ws';
 
 const WS_PORT = parseInt(process.env.WS_PORT || '8080', 10);
-const HOG_OSC_HOST = process.env.HOG_OSC_HOST || '192.168.1.51';
-const HOG_OSC_PORT = parseInt(process.env.HOG_OSC_PORT || '7001', 10);
+let HOG_OSC_HOST = process.env.HOG_OSC_HOST || '192.168.1.51';
+let HOG_OSC_PORT = parseInt(process.env.HOG_OSC_PORT || '7001', 10);
 
 // Simple logger
 function log(...args) {
@@ -59,6 +59,46 @@ function handleClientMessage(ws, rawData) {
   log('WS ←', data);
 
   switch (type) {
+
+    // конфиг OSC (host/port) приходит с фронта
+    case 'osc_config': {
+      const host = String(data.host || '').trim();
+      const port = Number(data.port);
+
+      if (!host || !Number.isFinite(port) || port <= 0 || port > 65535) {
+        log('Invalid osc_config from client:', data);
+        try {
+          ws.send(
+            JSON.stringify({
+              type: 'osc_config_error',
+              message: 'Invalid host or port'
+            })
+          );
+        } catch {}
+        break;
+      }
+
+      HOG_OSC_HOST = host;
+      HOG_OSC_PORT = port;
+
+      // обновляем целевой адрес у уже открытого UDP-порта
+      oscPort.options.remoteAddress = host;
+      oscPort.options.remotePort = port;
+
+      log(`Updated OSC target → ${host}:${port}`);
+
+      try {
+        ws.send(
+          JSON.stringify({
+            type: 'osc_config_ok',
+            host,
+            port
+          })
+        );
+      } catch {}
+
+      break;
+    }
 
     // обычные клавиши Programmer / Command Line
     case 'keypress': {
