@@ -124,7 +124,7 @@ function handleClientMessage(ws, rawData) {
       const delta = Number(data.delta);
       if (!Number.isFinite(encoder) || !Number.isFinite(delta)) return;
       const address = `/hog/hardware/encoderwheel/${encoder}`;
-      sendOscMessage(address, [{ type: 'f', value: Math.floor(delta * 120) }]);
+      sendOscMessage(address, [{ type: 'f', value: Math.floor(delta * 300) }]);
 
       break;
     }
