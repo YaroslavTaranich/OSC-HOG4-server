@@ -211,8 +211,8 @@ export const PlaybacksScreen: React.FC = () => {
                   </HogButton>
 
                   <div className="playback-slider-wrapper">
-                  </div>
                   <VerticalFader value={level} onChange={(val) => handleSliderChange(n, val)} onStart={() => handleSliderStart(n)} onEnd={() => handleSliderEnd(n)} />
+                  </div>
 
                   <HogButton
                     className="btn btn--secondary playback-square"

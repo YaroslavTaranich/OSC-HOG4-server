@@ -42,30 +42,32 @@ export const SettingsScreen: React.FC = () => {
         <div className="section-title">OSC Connection Settings</div>
         <form className="settings-form" onSubmit={handleSubmit}>
           <div className="form-row">
-            <label className="form-label">
+            <label className="form-label" htmlFor="osc-ip">
               IP Address
-              <input
-                className="form-input"
-                type="text"
-                value={ip}
-                onChange={(e) => setIp(e.target.value)}
-                placeholder="e.g. 192.168.0.10"
-              />
             </label>
+            <input
+              id="osc-ip"
+              className="form-input"
+              type="text"
+              value={ip}
+              onChange={(e) => setIp(e.target.value)}
+              placeholder="e.g. 192.168.0.10"
+            />
           </div>
           <div className="form-row">
-            <label className="form-label">
+            <label className="form-label" htmlFor="osc-port">
               Port
-              <input
-                className="form-input"
-                type="number"
-                min={1}
-                max={65535}
-                value={port}
-                onChange={(e) => setPort(e.target.value)}
-                placeholder="8080"
-              />
             </label>
+            <input
+              id="osc-port"
+              className="form-input"
+              type="number"
+              min={1}
+              max={65535}
+              value={port}
+              onChange={(e) => setPort(e.target.value)}
+              placeholder="7001"
+            />
           </div>
 
           <div className="form-row">
