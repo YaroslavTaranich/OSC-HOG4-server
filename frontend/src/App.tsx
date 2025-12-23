@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { useHogWebSocket } from './hooks/useHogWebSocket';
+import { HogWebSocketProvider, useHogWebSocket } from './hooks/useHogWebSocket';
 import { ProgrammerScreen } from './screens/ProgrammerScreen';
 import { PlaybacksScreen } from './screens/PlaybacksScreen';
 import { ButtonsScreen } from './screens/ButtonsScreen';
@@ -15,9 +15,8 @@ export const App: React.FC = () => {
     return `${protocol}//${loc.hostname}:8080`;
   }, []);
 
-  const { send, status } = useHogWebSocket(wsUrl);
-
   return (
+    <HogWebSocketProvider url={wsUrl}>
     <div className="app-root">
       <header className="app-header">
         <div className="app-title">Hog OSC Remote</div>
@@ -46,11 +45,13 @@ export const App: React.FC = () => {
       </nav>
 
       <main className="app-main">
-        {screen === 'programmer' && <ProgrammerScreen send={send} />}
-        {screen === 'playbacks' && <PlaybacksScreen send={send} />}
-        {screen === 'buttons' && <ButtonsScreen send={send} />}
+        {screen === 'programmer' && <ProgrammerScreen />}
+        {screen === 'playbacks' && <PlaybacksScreen />}
+        {screen === 'buttons' && <ButtonsScreen />}
       </main>
     </div>
+    </HogWebSocketProvider>
+
   );
 };
 

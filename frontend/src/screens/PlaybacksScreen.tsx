@@ -1,41 +1,62 @@
 import React, { useMemo, useRef, useState } from 'react';
-
-interface PlaybacksScreenProps {
-  send: (payload: unknown) => void;
-}
+import { useHogWebSocket } from '../hooks/useHogWebSocket';
+import { HogButton } from '../ui/HogButton';
 
 const TOTAL_PLAYBACKS = 100;
 const PAGE_SIZE = 10;
 
 type Action = 'go' | 'back' | 'release' | 'flash';
 
+const clamp = (v: number, min: number, max: number) =>
+  Math.min(max, Math.max(min, v));
+
+
 interface VerticalFaderProps {
   value: number; // 0..100
+  onStart: () => void;
   onChange: (value: number) => void;
+  onEnd: () => void;
 }
 
-const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
-
-const VerticalFader: React.FC<VerticalFaderProps> = ({ value, onChange }) => {
+const VerticalFader: React.FC<VerticalFaderProps> = ({
+  value,
+  onStart,
+  onChange,
+  onEnd
+}) => {
   const trackRef = useRef<HTMLDivElement | null>(null);
   const activePointerId = useRef<number | null>(null);
+  const isActive = useRef(false);
+  const wheelTimeout = useRef<number | null>(null);
+
+  const startInteraction = () => {
+    if (isActive.current) return;
+    isActive.current = true;
+    onStart();
+  };
+
+  const endInteraction = () => {
+    if (!isActive.current) return;
+    isActive.current = false;
+    onEnd();
+  };
 
   const setValueFromClientY = (clientY: number) => {
     const rect = trackRef.current?.getBoundingClientRect();
     if (!rect) return;
     const rel = clamp((rect.bottom - clientY) / rect.height, 0, 1);
-    const next = Math.round(rel * 100);
-    onChange(next);
+    onChange(Math.round(rel * 100));
   };
+
+  /* -------- pointer -------- */
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     e.preventDefault();
+    startInteraction();
+
     activePointerId.current = e.pointerId;
-    try {
-      (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    } catch {
-      /* noop */
-    }
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+
     setValueFromClientY(e.clientY);
   };
 
@@ -44,21 +65,33 @@ const VerticalFader: React.FC<VerticalFaderProps> = ({ value, onChange }) => {
     setValueFromClientY(e.clientY);
   };
 
-  const clearPointer = (e: React.PointerEvent<HTMLDivElement>) => {
+  const handlePointerEnd = (e: React.PointerEvent<HTMLDivElement>) => {
     if (activePointerId.current !== e.pointerId) return;
+
     try {
       (e.target as HTMLElement).releasePointerCapture(e.pointerId);
-    } catch {
-      /* noop */
-    }
+    } catch { }
+
     activePointerId.current = null;
+    endInteraction();
   };
+
+  /* -------- wheel -------- */
 
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     e.preventDefault();
-    const delta = -e.deltaY / 20; // tune sensitivity
-    const next = clamp(value + delta, 0, 100);
-    onChange(Math.round(next));
+    startInteraction();
+
+    const delta = -e.deltaY / 20;
+    onChange(clamp(Math.round(value + delta), 0, 100));
+
+    if (wheelTimeout.current) {
+      clearTimeout(wheelTimeout.current);
+    }
+
+    wheelTimeout.current = window.setTimeout(() => {
+      endInteraction();
+    }, 200);
   };
 
   return (
@@ -68,9 +101,9 @@ const VerticalFader: React.FC<VerticalFaderProps> = ({ value, onChange }) => {
         className="playback-fader__track"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
-        onPointerUp={clearPointer}
-        onPointerCancel={clearPointer}
-        onPointerLeave={clearPointer}
+        onPointerUp={handlePointerEnd}
+        onPointerCancel={handlePointerEnd}
+        onPointerLeave={handlePointerEnd}
         onWheel={handleWheel}
       >
         <div className="playback-fader__thumb" style={{ bottom: `${value}%` }} />
@@ -79,7 +112,9 @@ const VerticalFader: React.FC<VerticalFaderProps> = ({ value, onChange }) => {
   );
 };
 
-export const PlaybacksScreen: React.FC<PlaybacksScreenProps> = ({ send }) => {
+export const PlaybacksScreen: React.FC = () => {
+  const { send } = useHogWebSocket()
+
   const pages = useMemo(() => Math.ceil(TOTAL_PLAYBACKS / PAGE_SIZE), []);
   const [page, setPage] = useState(1);
   const [levels, setLevels] = useState<Record<number, number>>({});
@@ -101,6 +136,12 @@ export const PlaybacksScreen: React.FC<PlaybacksScreenProps> = ({ send }) => {
   const handleSliderChange = (playback: number, value: number) => {
     setLevels((prev) => ({ ...prev, [playback]: value }));
     sendFader(playback, value);
+  };
+  const handleSliderStart = (playback: number) => {
+    send({ type: 'playback_fader_start', playback })
+  };
+  const handleSliderEnd = (playback: number) => {
+    send({ type: 'playback_fader_end', playback })
   };
 
   return (
@@ -144,35 +185,41 @@ export const PlaybacksScreen: React.FC<PlaybacksScreenProps> = ({ send }) => {
                 <div className="playback-card__value playback-card__value--below">{level.toFixed(0)}%</div>
 
                 <div className="playback-vertical-stack">
-                  <button
+                  <HogButton
                     className="btn btn--danger playback-square"
-                    onClick={() => sendAction(n, 'release')}
+                    buttonKey={`choose/${n}`}
                   >
-                    RELEASE
-                  </button>
-                  <button
+                    CHOOSE
+                  </HogButton>
+                  <HogButton
                     className="btn btn--accent playback-square"
-                    onClick={() => sendAction(n, 'go')}
+                    buttonKey={`go/${n}`}
                   >
                     GO
-                  </button>
-                  <button
-                    className="btn btn--primary playback-square"
-                    onClick={() => sendAction(n, 'back')}
+                  </HogButton>
+                  <HogButton
+                    className="btn btn--secondary playback-square"
+                    buttonKey={`pause/${n}`}
+                  >
+                    PAUSE
+                  </HogButton>
+                  <HogButton
+                    className="btn btn--secondary playback-square"
+                    buttonKey={`goback/${n}`}
                   >
                     BACK
-                  </button>
+                  </HogButton>
 
                   <div className="playback-slider-wrapper">
-                    <VerticalFader value={level} onChange={(val) => handleSliderChange(n, val)} />
                   </div>
+                  <VerticalFader value={level} onChange={(val) => handleSliderChange(n, val)} onStart={() => handleSliderStart(n)} onEnd={() => handleSliderEnd(n)} />
 
-                  <button
+                  <HogButton
                     className="btn btn--secondary playback-square"
-                    onClick={() => sendAction(n, 'flash')}
+                    buttonKey={`flash/${n}`}
                   >
                     FLASH
-                  </button>
+                  </HogButton>
                 </div>
               </div>
             );

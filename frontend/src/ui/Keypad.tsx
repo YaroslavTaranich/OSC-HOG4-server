@@ -1,8 +1,6 @@
 import React from 'react';
+import { HogButton } from './HogButton';
 
-interface KeypadProps {
-  onKeyPress: (key: string) => void;
-}
 
 type KeyDef = {
   label: string;
@@ -13,39 +11,36 @@ type KeyDef = {
 const ROWS: KeyDef[][] = [
   [
     { label: '⌫', key: 'BACKSPACE' },
-    { label: '/', key: '/' },
-    { label: '-', key: '-' },
-    { label: '+', key: '+' }
+    { label: '/', key: 'slash' },
+    { label: '-', key: 'minus' },
+    { label: '+', key: 'plus' }
   ],
   [
-    { label: '7', key: '7' },
-    { label: '8', key: '8' },
-    { label: '9', key: '9' },
+    { label: '7', key: 'seven' },
+    { label: '8', key: 'eight' },
+    { label: '9', key: 'nine' },
     { label: 'THRU', key: 'THRU' }
   ],
   [
-    { label: '4', key: '4' },
-    { label: '5', key: '5' },
-    { label: '6', key: '6' },
+    { label: '4', key: 'four' },
+    { label: '5', key: 'five' },
+    { label: '6', key: 'six' },
     { label: 'FULL', key: 'FULL' }
   ],
   [
-    { label: '1', key: '1' },
-    { label: '2', key: '2' },
-    { label: '3', key: '3' },
-    { label: '@', key: '@' }
+    { label: '1', key: 'one' },
+    { label: '2', key: 'two' },
+    { label: '3', key: 'three' },
+    { label: '@', key: 'at' }
   ],
   [
-    { label: '0', key: '0' },
-    { label: '.', key: '.' },
+    { label: '0', key: 'zero' },
+    { label: '.', key: 'period' },
     { label: 'ENTER', key: 'ENTER', span: 2 }
   ]
 ];
 
-export const Keypad: React.FC<KeypadProps> = ({ onKeyPress }) => {
-  const handle = (key: string) => {
-    onKeyPress(key);
-  };
+export const Keypad: React.FC = () => {
 
   return (
     <div className="keypad">
@@ -55,16 +50,16 @@ export const Keypad: React.FC<KeypadProps> = ({ onKeyPress }) => {
           className={`keypad-row ${idx === ROWS.length - 1 ? 'keypad-row--last' : ''}`}
         >
           {row.map(({ label, key, span }) => (
-            <button
+            <HogButton
               key={key + String(span ?? 1)}
               className={`btn btn--secondary keypad-key playback-square ${
                 span === 2 ? 'playback-square--double keypad-key--enter' : ''
               }`}
               style={span === 2 ? { gridColumn: 'span 2' } : undefined}
-              onClick={() => handle(key)}
+              buttonKey={key}
             >
               {label}
-            </button>
+            </HogButton>
           ))}
         </div>
       ))}

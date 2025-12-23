@@ -2,15 +2,41 @@ import React, { useRef, useState } from 'react';
 
 interface EncoderStripProps {
   count: number;
+  onStart: (index: number) => void;
   onChange: (index: number, delta: number) => void;
+  onEnd: (index: number) => void;
 }
 
-export const EncoderStrip: React.FC<EncoderStripProps> = ({ count, onChange }) => {
+export const EncoderStrip: React.FC<EncoderStripProps> = ({
+  count,
+  onStart,
+  onChange,
+  onEnd
+}) => {
   const trackRefs = useRef<(HTMLDivElement | null)[]>(Array(count).fill(null));
+
   const activePointer = useRef<(number | null)[]>(Array(count).fill(null));
   const activeInterval = useRef<(number | null)[]>(Array(count).fill(null));
   const currentNorm = useRef<number[]>(Array(count).fill(0));
-  const [intensity, setIntensity] = useState<number[]>(Array(count).fill(0)); // visual feedback -1..1
+
+  const isActive = useRef<boolean[]>(Array(count).fill(false));
+  const wheelTimeout = useRef<(number | null)[]>(Array(count).fill(null));
+
+  const [intensity, setIntensity] = useState<number[]>(Array(count).fill(0));
+
+  /* ---------------- helpers ---------------- */
+
+  const startInteraction = (index: number) => {
+    if (isActive.current[index]) return;
+    isActive.current[index] = true;
+    onStart(index);
+  };
+
+  const endInteraction = (index: number) => {
+    if (!isActive.current[index]) return;
+    isActive.current[index] = false;
+    onEnd(index);
+  };
 
   const sendDelta = (index: number, delta: number) => {
     if (delta !== 0) {
@@ -23,39 +49,7 @@ export const EncoderStrip: React.FC<EncoderStripProps> = ({ count, onChange }) =
     if (!rect) return 0;
     const centerY = rect.top + rect.height / 2;
     const half = rect.height / 2;
-    const norm = Math.max(-1, Math.min(1, (centerY - clientY) / half)); // -1..1
-    return norm;
-  };
-
-  const handlePointerDown = (index: number, event: React.PointerEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    activePointer.current[index] = event.pointerId;
-    try {
-      (event.target as HTMLElement).setPointerCapture(event.pointerId);
-    } catch {
-      /* noop */
-    }
-    const norm = computeNormFromClientY(index, event.clientY);
-    updateNorm(index, norm);
-    startInterval(index);
-  };
-
-  const handlePointerMove = (index: number, event: React.PointerEvent<HTMLDivElement>) => {
-    if (activePointer.current[index] !== event.pointerId) return;
-    const norm = computeNormFromClientY(index, event.clientY);
-    updateNorm(index, norm);
-  };
-
-  const handlePointerEnd = (index: number, event: React.PointerEvent<HTMLDivElement>) => {
-    if (activePointer.current[index] !== event.pointerId) return;
-    try {
-      (event.target as HTMLElement).releasePointerCapture(event.pointerId);
-    } catch {
-      /* noop */
-    }
-    activePointer.current[index] = null;
-    stopInterval(index);
-    updateNorm(index, 0);
+    return Math.max(-1, Math.min(1, (centerY - clientY) / half));
   };
 
   const updateNorm = (index: number, norm: number) => {
@@ -67,34 +61,84 @@ export const EncoderStrip: React.FC<EncoderStripProps> = ({ count, onChange }) =
     });
   };
 
+  /* ---------------- pointer ---------------- */
+
   const startInterval = (index: number) => {
     if (activeInterval.current[index] != null) return;
+
     const id = window.setInterval(() => {
       const norm = currentNorm.current[index] ?? 0;
-      const delta = norm * 0.08; // reduced sensitivity
+      const delta = norm * 0.08;
       sendDelta(index, delta);
     }, 120);
+
     activeInterval.current[index] = id;
   };
 
   const stopInterval = (index: number) => {
     const id = activeInterval.current[index];
     if (id != null) {
-      window.clearInterval(id);
+      clearInterval(id);
       activeInterval.current[index] = null;
     }
   };
 
-  const handleWheel = (index: number, event: React.WheelEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    const delta = -event.deltaY / 900; // reduced sensitivity
-    sendDelta(index, delta);
+  const handlePointerDown = (index: number, e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    startInteraction(index);
+
+    activePointer.current[index] = e.pointerId;
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+
+    const norm = computeNormFromClientY(index, e.clientY);
+    updateNorm(index, norm);
+    startInterval(index);
   };
+
+  const handlePointerMove = (index: number, e: React.PointerEvent<HTMLDivElement>) => {
+    if (activePointer.current[index] !== e.pointerId) return;
+    const norm = computeNormFromClientY(index, e.clientY);
+    updateNorm(index, norm);
+  };
+
+  const handlePointerEnd = (index: number, e: React.PointerEvent<HTMLDivElement>) => {
+    if (activePointer.current[index] !== e.pointerId) return;
+
+    try {
+      (e.target as HTMLElement).releasePointerCapture(e.pointerId);
+    } catch {}
+
+    activePointer.current[index] = null;
+    stopInterval(index);
+    updateNorm(index, 0);
+    endInteraction(index);
+  };
+
+  /* ---------------- wheel ---------------- */
+
+  const handleWheel = (index: number, e: React.WheelEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    startInteraction(index);
+
+    const delta = -e.deltaY / 900;
+    sendDelta(index, delta);
+
+    if (wheelTimeout.current[index]) {
+      clearTimeout(wheelTimeout.current[index]!);
+    }
+
+    wheelTimeout.current[index] = window.setTimeout(() => {
+      endInteraction(index);
+    }, 200);
+  };
+
+  /* ---------------- render ---------------- */
 
   return (
     <div className="encoder-strip">
       {Array.from({ length: count }, (_, i) => {
         const glow = Math.abs(intensity[i] ?? 0);
+
         return (
           <div
             key={i}
@@ -116,9 +160,10 @@ export const EncoderStrip: React.FC<EncoderStripProps> = ({ count, onChange }) =
                   className="encoder-fader__thumb"
                   style={{
                     top: `${(0.5 - (currentNorm.current[i] || 0) / 2) * 100}%`,
-                    boxShadow: `0 4px 12px rgba(0,0,0,0.6), 0 0 0 ${2 + glow * 2}px rgba(56,189,248,${
-                      0.25 + glow * 0.35
-                    })`
+                    boxShadow: `0 4px 12px rgba(0,0,0,0.6),
+                      0 0 0 ${2 + glow * 2}px rgba(56,189,248,${
+                        0.25 + glow * 0.35
+                      })`
                   }}
                 />
               </div>
@@ -129,6 +174,3 @@ export const EncoderStrip: React.FC<EncoderStripProps> = ({ count, onChange }) =
     </div>
   );
 };
-
-
-

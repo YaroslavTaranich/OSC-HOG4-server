@@ -2,10 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from './App';
 import './styles.css';
+import { HogWebSocketProvider } from './hooks/useHogWebSocket';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <HogWebSocketProvider>
+      <App />
+    </HogWebSocketProvider>
   </React.StrictMode>
 );
 

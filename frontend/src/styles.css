@@ -2,6 +2,7 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  user-select: none;
 }
 
 body {
@@ -140,6 +141,10 @@ button {
 .btn--tall {
   padding-block: 1.4rem;
 }
+.btn--flash {
+  width: 120px;
+  height: 120px;
+}
 
 .btn:active {
   transform: translateY(1px) scale(0.98);
@@ -170,6 +175,7 @@ button {
   background: transparent;
   border: none;
   height: 100%;
+  touch-action: none;
 }
 
 .encoder-fader {
@@ -403,7 +409,7 @@ button {
 
 .playback-square {
   width: 70px;
-  height: 70px;
+  min-height: 70px;
   padding: 0;
   display: inline-flex;
   align-items: center;
@@ -430,6 +436,7 @@ button {
   display: flex;
   align-items: stretch;
   justify-content: center;
+  touch-action: none;
 }
 
 .playback-fader__track {
@@ -470,14 +477,14 @@ button {
 
   .playback-square {
     width: 56px;
-    height: 56px;
+    min-height: 56px;
     font-size: 0.8rem;
   }
 
   /* Keep keypad buttons desktop-sized on mobile */
   .keypad .playback-square {
     width: 80px;
-    height: 80px;
+    min-height: 80px;
     font-size: 1rem;
   }
 

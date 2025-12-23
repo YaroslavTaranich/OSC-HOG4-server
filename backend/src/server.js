@@ -3,7 +3,7 @@ import osc from 'osc';
 import { WebSocketServer } from 'ws';
 
 const WS_PORT = parseInt(process.env.WS_PORT || '8080', 10);
-const HOG_OSC_HOST = process.env.HOG_OSC_HOST || '192.168.1.10';
+const HOG_OSC_HOST = process.env.HOG_OSC_HOST || '192.168.1.51';
 const HOG_OSC_PORT = parseInt(process.env.HOG_OSC_PORT || '7001', 10);
 
 // Simple logger
@@ -18,7 +18,7 @@ const oscPort = new osc.UDPPort({
   localPort: 0, // random available port, we only send
   remoteAddress: HOG_OSC_HOST,
   remotePort: HOG_OSC_PORT,
-  metadata: true
+  metadata: false
 });
 
 oscPort.open();
@@ -46,15 +46,6 @@ function sendOscMessage(address, args = []) {
   log('OSC →', JSON.stringify(msg));
   oscPort.send(msg);
 }
-
-/**
- * Handle a single WebSocket message from client.
- * Expected JSON shape:
- * - { type: "keypress", key: "INTENSITY" }
- * - { type: "encoder", encoder: 1, delta: 0.02 }
- * - { type: "playback", playback: 1, action: "go" | "back" | "release" }
- * - { type: "button", id: number } – programmable buttons, mapped to console controls
- */
 function handleClientMessage(ws, rawData) {
   let data;
   try {
@@ -68,6 +59,8 @@ function handleClientMessage(ws, rawData) {
   log('WS ←', data);
 
   switch (type) {
+
+    // обычные клавиши Programmer / Command Line
     case 'keypress': {
       const key = String(data.key || '').toUpperCase();
       if (!key) return;
@@ -75,46 +68,103 @@ function handleClientMessage(ws, rawData) {
       sendOscMessage(address);
       break;
     }
+
+    // энкодеры
+    case 'encoder_start': {
+      const encoder = Number(data.encoder);
+      if (!Number.isFinite(encoder)) return;
+      const address = `/hog/hardware/encoderwheel/${encoder}/z`;
+
+      sendOscMessage(address, [{ type: 'f', value: 1 }]);
+
+      break;
+    }
     case 'encoder': {
       const encoder = Number(data.encoder);
       const delta = Number(data.delta);
       if (!Number.isFinite(encoder) || !Number.isFinite(delta)) return;
-      const address = `/hog/encoder/${encoder}`;
-      sendOscMessage(address, [{ type: 'f', value: delta }]);
+      const address = `/hog/hardware/encoderwheel/${encoder}`;
+      sendOscMessage(address, [{ type: 'f', value: Math.floor(delta * 120) }]);
+
       break;
     }
+    case 'encoder_end': {
+      const encoder = Number(data.encoder);
+      if (!Number.isFinite(encoder)) return;
+      const address = `/hog/hardware/encoderwheel/${encoder}/z`;
+
+      sendOscMessage(address, [{ type: 'f', value: 0 }]);
+
+      break;
+    }
+
+    // плейбеки 1–30
     case 'playback': {
       const playback = Number(data.playback);
       const action = String(data.action || '').toLowerCase();
       if (!Number.isFinite(playback)) return;
       if (!['go', 'back', 'release', 'flash'].includes(action)) return;
-      const address = `/hog/playback/${playback}/${action}`;
+      const address = `/hog/hardware/fader/${playback}/${action}`;
       sendOscMessage(address);
       break;
     }
+
+    case 'playback_fader_start': {
+      const playback = Number(data.playback);
+      if (!Number.isFinite(playback)) return;
+      const address = `/hog/hardware/fader/${playback}`;
+      sendOscMessage(address + '/z', [{ type: 'f', value: 1 }]);
+      break;
+    }
+
     case 'playback_fader': {
       const playback = Number(data.playback);
-      const value = Number(data.value);
-      if (!Number.isFinite(playback) || !Number.isFinite(value)) return;
-      // Expect value in 0..1 range; clamp for safety.
-      const clamped = Math.min(1, Math.max(0, value));
-      const address = `/hog/playback/${playback}/fader`;
-      sendOscMessage(address, [{ type: 'f', value: clamped }]);
+      const value = Number(data.value)
+      if (!Number.isFinite(playback)) return;
+      const address = `/hog/hardware/fader/${playback}`;
+      sendOscMessage(address, [{ type: 'f', value: Math.floor(255 * value) }]);
       break;
     }
-    case 'button': {
 
-      const id = Number(data.id);
-      if (!Number.isFinite(id)) return;
-
-      const address = `/hog/playback/button/${id}/go`;
-      sendOscMessage(address);
+    case 'playback_fader_end': {
+      const playback = Number(data.playback);
+      if (!Number.isFinite(playback)) return;
+      const address = `/hog/hardware/fader/${playback}`;
+      sendOscMessage(address + '/z', [{ type: 'f', value: 0 }]);
       break;
     }
+
+    // программируемые кнопки и цифры
+    case 'button_start': {
+      const name = String(data.key || '').toLowerCase(); // e.g. 'one', 'two', ..., 'twelve', 'clear', 'go', 'live'
+      if (!name) return;
+
+      const baseAddr = `/hog/hardware/${name}`;
+      const zAddr = `${baseAddr}/z`;
+
+      sendOscMessage(zAddr, [{ type: 'f', value: 1 }]);
+      sendOscMessage(baseAddr, [{ type: 'f', value: 1 }]);
+
+      break;
+    }
+    case 'button_end': {
+      const name = String(data.key || '').toLowerCase(); // e.g. 'one', 'two', ..., 'twelve', 'clear', 'go', 'live'
+      if (!name) return;
+
+      const baseAddr = `/hog/hardware/${name}`;
+      const zAddr = `${baseAddr}/z`;
+
+        sendOscMessage(baseAddr, [{ type: 'f', value: 0 }]);
+        sendOscMessage(zAddr, [{ type: 'f', value: 0 }]);
+
+      break;
+    }
+
     default:
       log('Unknown message type from client:', data);
   }
 }
+
 
 wss.on('connection', (ws, req) => {
   log('Client connected from', req.socket.remoteAddress);
