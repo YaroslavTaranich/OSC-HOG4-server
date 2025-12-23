@@ -6,9 +6,7 @@ import { HogWebSocketProvider } from './hooks/useHogWebSocket';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <HogWebSocketProvider>
-      <App />
-    </HogWebSocketProvider>
+    <App />
   </React.StrictMode>
 );
 
