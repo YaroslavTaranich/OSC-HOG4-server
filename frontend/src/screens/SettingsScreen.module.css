@@ -1,3 +1,5 @@
+@import "../styles/variables.module.css";
+
 .settingsForm {
   display: flex;
   flex-direction: column;

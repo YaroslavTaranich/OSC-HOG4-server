@@ -1,3 +1,5 @@
+@import "../styles/variables.module.css";
+
 .sectionEncoders {
   min-height: 300px;
   display: flex;

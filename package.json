@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "build:frontend": "npm --prefix frontend run build",
+    "start:backend": "npm --prefix backend start",
+    "start:frontend": "npm --prefix frontend run build && npm --prefix frontend run preview",
+    "start": "npm run start:backend & npm run start:frontend"
+  }
+}
