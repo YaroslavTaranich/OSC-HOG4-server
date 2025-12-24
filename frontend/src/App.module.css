@@ -92,18 +92,3 @@
   flex-direction: column;
   gap: var(--spacing-2xl);
 }
-
-@media (orientation: landscape) and (max-width: 1024px) {
-  .appRoot {
-    flex-direction: row;
-  }
-  .appHeader {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    gap: var(--spacing-2xl);
-  }
-  .appMain {
-    flex: 1;
-  }
-}
-

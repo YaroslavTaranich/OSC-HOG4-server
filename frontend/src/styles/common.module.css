@@ -82,6 +82,7 @@ button {
 
 @media (min-width: 768px) {
   .screen {
+      justify-content: center;
     flex-direction: row;
   }
 
