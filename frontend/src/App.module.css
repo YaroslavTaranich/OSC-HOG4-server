@@ -1,18 +1,21 @@
-@import "./styles/variables.module.css";
+@import url('./styles/variables.module.css');
 
 .appRoot {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 
 .appHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   padding: var(--spacing-2xl) var(--spacing-3xl);
-  background: var(--color-bg-header);
+
   color: #fff;
+
+  background: var(--color-bg-header);
 }
 
 .appTitle {
@@ -29,9 +32,11 @@
 .appStatusConnecting {
   background: var(--color-accent-indigo);
 }
+
 .appStatusOpen {
   background: var(--color-accent-green);
 }
+
 .appStatusClosed {
   background: var(--color-accent-red);
 }
@@ -47,19 +52,25 @@
 }
 
 .tabBtn {
+  cursor: pointer;
+
+  position: relative;
+
   flex: 1;
+
   padding: var(--spacing-2xl) var(--spacing-lg);
-  background: transparent;
-  color: var(--color-text-muted);
   border: none;
   border-bottom: 2px solid transparent;
+
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
   text-align: center;
   text-decoration: none;
-  cursor: pointer;
+
+  background: transparent;
+
   transition: all var(--transition-fast);
-  position: relative;
 }
 
 .tabBtn:hover {
@@ -68,27 +79,31 @@
 }
 
 .tabBtnActive {
-  color: var(--color-text-secondary);
   border-bottom-color: var(--color-accent-primary);
-  background: var(--color-shadow-accent-very-light);
   font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  background: var(--color-shadow-accent-very-light);
 }
 
 .tabBtnActive::before {
   content: '';
+
   position: absolute;
   top: 0;
-  left: 0;
   right: 0;
+  left: 0;
+
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--color-accent-primary), transparent);
+
   opacity: 0.3;
+  background: linear-gradient(90deg, transparent, var(--color-accent-primary), transparent);
 }
 
 .appMain {
-  flex: 1;
-  padding: var(--spacing-2xl);
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: var(--spacing-2xl);
+
+  padding: var(--spacing-2xl);
 }

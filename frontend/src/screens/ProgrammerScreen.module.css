@@ -1,9 +1,9 @@
-@import "../styles/variables.module.css";
+@import url('../styles/variables.module.css');
 
 .sectionEncoders {
-  min-height: 300px;
   display: flex;
   flex-direction: column;
+  min-height: 300px;
 }
 
 .sectionParams {
@@ -19,8 +19,8 @@
 .sectionHighlight .paramsRow,
 .sectionNav .paramsRow {
   display: flex;
-  justify-content: center;
   gap: var(--spacing-lg);
+  justify-content: center;
 }
 
 .sectionHighlight {
@@ -34,5 +34,3 @@
 .sectionKeypad {
   /* Additional styles for keypad section */
 }
-
-

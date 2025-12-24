@@ -1,8 +1,7 @@
-@import "../styles/variables.module.css";
+@import url('../styles/variables.module.css');
 
 .buttonsGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(var(--size-keypad-key), 1fr));
   gap: var(--spacing-lg);
 }
-

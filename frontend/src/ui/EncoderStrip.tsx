@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, {useRef, useState} from 'react';
 import styles from './EncoderStrip.module.css';
 
 interface EncoderStripProps {
@@ -8,12 +8,7 @@ interface EncoderStripProps {
   onEnd: (index: number) => void;
 }
 
-export const EncoderStrip: React.FC<EncoderStripProps> = ({
-  count,
-  onStart,
-  onChange,
-  onEnd
-}) => {
+export const EncoderStrip: React.FC<EncoderStripProps> = ({ count, onStart, onChange, onEnd }) => {
   const trackRefs = useRef<(HTMLDivElement | null)[]>(Array(count).fill(null));
 
   const activePointer = useRef<(number | null)[]>(Array(count).fill(null));
@@ -66,14 +61,12 @@ export const EncoderStrip: React.FC<EncoderStripProps> = ({
 
   const startInterval = (index: number) => {
     if (activeInterval.current[index] != null) return;
-
-    const id = window.setInterval(() => {
-      const norm = currentNorm.current[index] ?? 0;
-      const delta = norm * 0.08;
-      sendDelta(index, delta);
+  
+    activeInterval.current[index] = window.setInterval(() => {
+        const norm = currentNorm.current[index] ?? 0;
+        const delta = norm * 0.08;
+        sendDelta(index, delta);
     }, 120);
-
-    activeInterval.current[index] = id;
   };
 
   const stopInterval = (index: number) => {
@@ -107,7 +100,9 @@ export const EncoderStrip: React.FC<EncoderStripProps> = ({
 
     try {
       (e.target as HTMLElement).releasePointerCapture(e.pointerId);
-    } catch {}
+    } catch (error) {
+      console.error(error);
+    }
 
     activePointer.current[index] = null;
     stopInterval(index);
@@ -152,19 +147,14 @@ export const EncoderStrip: React.FC<EncoderStripProps> = ({
             onPointerLeave={(e) => handlePointerEnd(i, e)}
           >
             <div className={styles.encoderFader}>
-              <div
-                ref={(el) => (trackRefs.current[i] = el)}
-                className={styles.encoderFaderTrack}
-              >
+              <div ref={(el) => (trackRefs.current[i] = el)} className={styles.encoderFaderTrack}>
                 <div className={styles.encoderFaderCenterline} />
                 <div
                   className={styles.encoderFaderThumb}
                   style={{
                     top: `${(0.5 - (currentNorm.current[i] || 0) / 2) * 100}%`,
                     boxShadow: `0 4px 12px rgba(0,0,0,0.6),
-                      0 0 0 ${2 + glow * 2}px rgba(56,189,248,${
-                        0.25 + glow * 0.35
-                      })`
+                      0 0 0 ${2 + glow * 2}px rgba(56,189,248,${0.25 + glow * 0.35})`,
                   }}
                 />
               </div>

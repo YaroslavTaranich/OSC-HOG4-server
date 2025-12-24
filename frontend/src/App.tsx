@@ -13,13 +13,13 @@ const AppLayout: React.FC = () => {
 
   const makeTabClassName = ({ isActive }: { isActive: boolean }) =>
     classNames(styles.tabBtn, {
-      [styles.tabBtnActive]: isActive
+      [styles.tabBtnActive]: isActive,
     });
 
   const statusClassMap: Record<string, string> = {
     connecting: styles.appStatusConnecting,
     open: styles.appStatusOpen,
-    closed: styles.appStatusClosed
+    closed: styles.appStatusClosed,
   };
 
   const headerStatusLabel = oscError ? 'OSC CONNECTION ERROR' : status.toUpperCase();
@@ -29,9 +29,7 @@ const AppLayout: React.FC = () => {
     <div className={styles.appRoot}>
       <header className={styles.appHeader}>
         <div className={styles.appTitle}>Hog OSC Remote</div>
-        <div className={classNames(styles.appStatus, headerStatusClass)}>
-          {headerStatusLabel}
-        </div>
+        <div className={classNames(styles.appStatus, headerStatusClass)}>{headerStatusLabel}</div>
       </header>
 
       <nav className={styles.appTabs}>
@@ -80,5 +78,3 @@ export const App: React.FC = () => {
     </HogWebSocketProvider>
   );
 };
-
-

@@ -9,8 +9,7 @@ import buttonStyles from '../ui/HogButton.module.css';
 const TOTAL_PLAYBACKS = 100;
 const PAGE_SIZE = 10;
 
-const clamp = (v: number, min: number, max: number) =>
-  Math.min(max, Math.max(min, v));
+const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
 
 interface VerticalFaderProps {
   value: number; // 0..100
@@ -19,12 +18,7 @@ interface VerticalFaderProps {
   onEnd: () => void;
 }
 
-const VerticalFader: React.FC<VerticalFaderProps> = ({
-  value,
-  onStart,
-  onChange,
-  onEnd
-}) => {
+const VerticalFader: React.FC<VerticalFaderProps> = ({ value, onStart, onChange, onEnd }) => {
   const trackRef = useRef<HTMLDivElement | null>(null);
   const activePointerId = useRef<number | null>(null);
   const isActive = useRef(false);
@@ -71,7 +65,9 @@ const VerticalFader: React.FC<VerticalFaderProps> = ({
 
     try {
       (e.target as HTMLElement).releasePointerCapture(e.pointerId);
-    } catch { }
+    } catch (error) {
+      console.error(error);
+    }
 
     activePointerId.current = null;
     endInteraction();
@@ -114,7 +110,7 @@ const VerticalFader: React.FC<VerticalFaderProps> = ({
 };
 
 export const PlaybacksScreen: React.FC = () => {
-  const { send } = useHogWebSocket()
+  const { send } = useHogWebSocket();
 
   const pages = useMemo(() => Math.ceil(TOTAL_PLAYBACKS / PAGE_SIZE), []);
   const [page, setPage] = useState(1);
@@ -122,7 +118,9 @@ export const PlaybacksScreen: React.FC = () => {
 
   const currentPlaybacks = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE + 1;
-    return Array.from({ length: PAGE_SIZE }, (_, i) => start + i).filter((n) => n <= TOTAL_PLAYBACKS);
+    return Array.from({ length: PAGE_SIZE }, (_, i) => start + i).filter(
+      (n) => n <= TOTAL_PLAYBACKS,
+    );
   }, [page]);
 
   const sendFader = (playback: number, value: number) => {
@@ -135,10 +133,10 @@ export const PlaybacksScreen: React.FC = () => {
     sendFader(playback, value);
   };
   const handleSliderStart = (playback: number) => {
-    send({ type: 'playback_fader_start', playback })
+    send({ type: 'playback_fader_start', playback });
   };
   const handleSliderEnd = (playback: number) => {
-    send({ type: 'playback_fader_end', playback })
+    send({ type: 'playback_fader_end', playback });
   };
 
   return (
@@ -149,9 +147,14 @@ export const PlaybacksScreen: React.FC = () => {
           {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
             <button
               key={p}
-              className={classNames(buttonStyles.btn, buttonStyles.btnSecondary, styles.playbackPageBtn, {
-                [commonStyles.playbackBtnActive]: page === p
-              })}
+              className={classNames(
+                buttonStyles.btn,
+                buttonStyles.btnSecondary,
+                styles.playbackPageBtn,
+                {
+                  [commonStyles.playbackBtnActive]: page === p,
+                },
+              )}
               onClick={() => setPage(p)}
             >
               {p}
@@ -181,7 +184,11 @@ export const PlaybacksScreen: React.FC = () => {
                 <div className={styles.playbackCardHeader}>
                   <span className={styles.playbackCardLabel}>PB {n}</span>
                 </div>
-                <div className={classNames(styles.playbackCardValue, styles.playbackCardValueBelow)}>{level.toFixed(0)}%</div>
+                <div
+                  className={classNames(styles.playbackCardValue, styles.playbackCardValueBelow)}
+                >
+                  {level.toFixed(0)}%
+                </div>
 
                 <div className={styles.playbackVerticalStack}>
                   <HogButton
@@ -210,7 +217,12 @@ export const PlaybacksScreen: React.FC = () => {
                   </HogButton>
 
                   <div className={styles.playbackSliderWrapper}>
-                  <VerticalFader value={level} onChange={(val) => handleSliderChange(n, val)} onStart={() => handleSliderStart(n)} onEnd={() => handleSliderEnd(n)} />
+                    <VerticalFader
+                      value={level}
+                      onChange={(val) => handleSliderChange(n, val)}
+                      onStart={() => handleSliderStart(n)}
+                      onEnd={() => handleSliderEnd(n)}
+                    />
                   </div>
 
                   <HogButton
@@ -228,6 +240,3 @@ export const PlaybacksScreen: React.FC = () => {
     </div>
   );
 };
-
-
-

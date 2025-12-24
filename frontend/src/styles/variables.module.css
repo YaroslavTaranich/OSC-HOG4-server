@@ -35,11 +35,11 @@
   --color-border-accent: #38bdf8;
 
   /* Colors - Shadows */
-  --color-shadow-primary: rgba(15, 23, 42, 0.7);
-  --color-shadow-accent: rgba(56, 189, 248, 0.3);
-  --color-shadow-accent-light: rgba(56, 189, 248, 0.25);
-  --color-shadow-accent-very-light: rgba(56, 189, 248, 0.1);
-  --color-shadow-accent-bg: rgba(56, 189, 248, 0.05);
+  --color-shadow-primary: rgb(15 23 42 / 70%);
+  --color-shadow-accent: rgb(56 189 248 / 30%);
+  --color-shadow-accent-light: rgb(56 189 248 / 25%);
+  --color-shadow-accent-very-light: rgb(56 189 248 / 10%);
+  --color-shadow-accent-bg: rgb(56 189 248 / 5%);
 
   /* Spacing */
   --spacing-xs: 0.2rem;
@@ -77,10 +77,10 @@
   --transition-fast: 0.2s ease;
 
   /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.6);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
-  --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.7);
-  --shadow-inset: inset 0 2px 8px rgba(0, 0, 0, 0.6);
+  --shadow-sm: 0 2px 8px rgb(0 0 0 / 60%);
+  --shadow-md: 0 4px 12px rgb(0 0 0 / 60%);
+  --shadow-lg: 0 10px 25px rgb(15 23 42 / 70%);
+  --shadow-inset: inset 0 2px 8px rgb(0 0 0 / 60%);
 
   /* Sizes */
   --size-encoder-width: 90%;
@@ -99,4 +99,3 @@
   --breakpoint-mobile: 768px;
   --breakpoint-tablet: 1024px;
 }
-

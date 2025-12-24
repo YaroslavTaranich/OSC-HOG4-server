@@ -1,4 +1,4 @@
-@import "../styles/variables.module.css";
+@import url('../styles/variables.module.css');
 
 .playbackPages {
   display: grid;
@@ -18,29 +18,34 @@
 .playbackPagesSelect select {
   width: 100%;
   padding: var(--spacing-xl);
-  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
-  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
+
   color: var(--color-text-secondary);
+
+  background: var(--color-bg-tertiary);
 }
 
 .playbackFaders {
+  overflow-x: auto;
   display: flex;
   flex-direction: row;
   gap: 10px;
-  overflow-x: auto;
+
   padding-bottom: var(--spacing-sm);
 }
 
 .playbackCard {
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-lg);
-  padding: 0;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
+
   min-width: 75px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-lg);
+
+  background: transparent;
 }
 
 .playbackCardVertical {
@@ -49,8 +54,9 @@
 
 .playbackCardHeader {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+
   font-size: var(--font-size-base);
   color: var(--color-text-tertiary);
 }
@@ -65,64 +71,80 @@
 }
 
 .playbackCardValueBelow {
-  text-align: center;
   width: 100%;
   margin-top: -0.2rem;
   margin-bottom: 0.1rem;
+  text-align: center;
 }
 
 .playbackVerticalStack {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 0.35rem;
+  align-items: center;
 }
 
 .playbackSliderWrapper {
-  width: var(--size-fader-width);
-  height: var(--size-fader-height);
   display: flex;
   align-items: center;
   justify-content: center;
+
+  width: var(--size-fader-width);
+  height: var(--size-fader-height);
   padding: 4px 0;
 }
 
 .playbackFader {
-  width: 100%;
-  height: 100%;
+  touch-action: none;
+
   display: flex;
   align-items: stretch;
   justify-content: center;
-  touch-action: none;
+
+  width: 100%;
+  height: 100%;
 }
 
 .playbackFaderTrack {
   position: relative;
+
+  overflow: hidden;
+
   width: var(--size-fader-width);
   height: 100%;
-  border-radius: var(--radius-xl);
-  background: linear-gradient(180deg, var(--color-accent-blue) 0%, var(--color-bg-tertiary) 60%, var(--color-bg-tertiary) 100%);
   border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-xl);
+
+  background: linear-gradient(
+    180deg,
+    var(--color-accent-blue) 0%,
+    var(--color-bg-tertiary) 60%,
+    var(--color-bg-tertiary) 100%
+  );
   box-shadow: var(--shadow-inset);
-  overflow: hidden;
 }
 
 .playbackFaderThumb {
   position: absolute;
   left: 0;
+  transform: translateY(50%);
+
   width: var(--size-fader-width);
   height: var(--size-fader-thumb-height);
-  background: linear-gradient(145deg, #1e293b, var(--color-bg-secondary));
   border: 1px solid var(--color-accent-primary);
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-md), 0 0 0 2px var(--color-shadow-accent-light);
-  transform: translateY(50%);
+
+  background: linear-gradient(145deg, #1e293b, var(--color-bg-secondary));
+  box-shadow:
+    var(--shadow-md),
+    0 0 0 2px var(--color-shadow-accent-light);
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .playbackPages {
     display: none;
   }
+
   .playbackPagesSelect {
     display: block;
   }
@@ -144,4 +166,3 @@
     min-width: 70px;
   }
 }
-

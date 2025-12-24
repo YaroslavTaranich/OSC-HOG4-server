@@ -1,6 +1,5 @@
 import React from 'react';
 import classNames from 'classnames';
-import { useHogWebSocket } from '../hooks/useHogWebSocket';
 import { HogButton } from '../ui/HogButton';
 import styles from './ButtonsScreen.module.css';
 import commonStyles from '../styles/common.module.css';
@@ -28,6 +27,3 @@ export const ButtonsScreen: React.FC = () => {
     </div>
   );
 };
-
-
-

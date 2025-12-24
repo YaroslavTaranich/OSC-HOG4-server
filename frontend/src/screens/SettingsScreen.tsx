@@ -9,7 +9,8 @@ type NotificationType = 'success' | 'error' | null;
 
 // Regular expression for IPv4 address validation
 // Matches: xxx.xxx.xxx.xxx where each xxx is 0-255
-const IPv4_REGEX = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+const IPv4_REGEX =
+  /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 
 const isValidIPv4 = (ip: string): boolean => {
   return IPv4_REGEX.test(ip.trim());
@@ -28,7 +29,10 @@ export const SettingsScreen: React.FC = () => {
     return window.localStorage.getItem('hogOscPort') || '7001';
   });
 
-  const [notification, setNotification] = useState<{ type: NotificationType; message: string } | null>(null);
+  const [notification, setNotification] = useState<{
+    type: NotificationType;
+    message: string;
+  } | null>(null);
   const [ipError, setIpError] = useState(false);
 
   useEffect(() => {
@@ -50,7 +54,8 @@ export const SettingsScreen: React.FC = () => {
       setIpError(true);
       setNotification({
         type: 'error',
-        message: 'Invalid IP address format. Please enter a valid IPv4 address (e.g., 192.168.1.51).'
+        message:
+          'Invalid IP address format. Please enter a valid IPv4 address (e.g., 192.168.1.51).',
       });
       return;
     }
@@ -61,7 +66,7 @@ export const SettingsScreen: React.FC = () => {
     if (!Number.isFinite(portNum) || portNum <= 0 || portNum > 65535) {
       setNotification({
         type: 'error',
-        message: 'Invalid port number. Port must be between 1 and 65535.'
+        message: 'Invalid port number. Port must be between 1 and 65535.',
       });
       return;
     }
@@ -69,7 +74,7 @@ export const SettingsScreen: React.FC = () => {
     if (status !== 'open') {
       setNotification({
         type: 'error',
-        message: 'Cannot save settings: WebSocket connection is not open.'
+        message: 'Cannot save settings: WebSocket connection is not open.',
       });
       return;
     }
@@ -83,17 +88,18 @@ export const SettingsScreen: React.FC = () => {
       send({
         type: 'osc_config',
         host,
-        port: portNum
+        port: portNum,
       });
       setNotification({
         type: 'success',
-        message: 'Settings saved successfully! Reconnecting...'
+        message: 'Settings saved successfully! Reconnecting...',
       });
     } catch (error) {
       setNotification({
         type: 'error',
-        message: 'Failed to save settings. Please try again.'
+        message: 'Failed to save settings. Please try again.',
       });
+      console.error(error);
     }
   };
 
@@ -102,10 +108,12 @@ export const SettingsScreen: React.FC = () => {
       <section className={commonStyles.screenSection}>
         <div className={commonStyles.sectionTitle}>OSC Connection Settings</div>
         {notification && (
-          <div className={classNames(styles.notification, {
-            [styles.notificationSuccess]: notification.type === 'success',
-            [styles.notificationError]: notification.type === 'error'
-          })}>
+          <div
+            className={classNames(styles.notification, {
+              [styles.notificationSuccess]: notification.type === 'success',
+              [styles.notificationError]: notification.type === 'error',
+            })}
+          >
             {notification.message}
           </div>
         )}
@@ -117,7 +125,7 @@ export const SettingsScreen: React.FC = () => {
             <input
               id="osc-ip"
               className={classNames(styles.formInput, {
-                [styles.formInputError]: ipError
+                [styles.formInputError]: ipError,
               })}
               type="text"
               value={ip}
@@ -164,6 +172,3 @@ export const SettingsScreen: React.FC = () => {
     </div>
   );
 };
-
-
-

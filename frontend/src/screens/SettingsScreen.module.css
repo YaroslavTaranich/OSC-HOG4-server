@@ -1,4 +1,4 @@
-@import "../styles/variables.module.css";
+@import url('../styles/variables.module.css');
 
 .settingsForm {
   display: flex;
@@ -8,64 +8,75 @@
 
 .formRow {
   display: flex;
-  align-items: center;
   gap: var(--spacing-3xl);
+  align-items: center;
 }
 
 .formLabel {
-  width: 200px;
   flex-shrink: 0;
+
+  width: 200px;
+
   font-size: var(--font-size-base);
-  color: var(--color-text-tertiary);
   font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
 }
 
 .formInput {
   flex: 1;
+
   min-width: 0;
   padding: var(--spacing-xl) var(--spacing-2xl);
-  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-primary);
-  background: var(--color-bg-tertiary);
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-base);
+  border-radius: var(--radius-sm);
+
   font-family: inherit;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+
+  background: var(--color-bg-tertiary);
+
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .notification {
+  margin-bottom: var(--spacing-2xl);
   padding: var(--spacing-xl) var(--spacing-2xl);
   border-radius: var(--radius-sm);
-  margin-bottom: var(--spacing-2xl);
+
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
+
   animation: slideIn 0.3s ease-out;
 }
 
 .notificationSuccess {
-  background: rgba(22, 163, 74, 0.15);
   border: 1px solid var(--color-accent-green);
   color: var(--color-accent-green);
+  background: rgb(22 163 74 / 15%);
 }
 
 .notificationError {
-  background: rgba(185, 28, 28, 0.15);
   border: 1px solid var(--color-accent-red);
   color: var(--color-accent-red);
+  background: rgb(185 28 28 / 15%);
 }
 
 @keyframes slideIn {
   from {
-    opacity: 0;
     transform: translateY(-10px);
+    opacity: 0;
   }
+
   to {
-    opacity: 1;
     transform: translateY(0);
+    opacity: 1;
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .formRow {
     flex-wrap: nowrap;
     gap: var(--spacing-lg);
@@ -73,8 +84,8 @@
   }
 
   .formLabel {
-    width: 170px;
     flex-shrink: 0;
+    width: 170px;
   }
 
   .formInput {
@@ -85,19 +96,19 @@
 }
 
 .formInput:focus {
-  outline: none;
   border-color: var(--color-accent-primary);
+  outline: none;
   box-shadow: 0 0 0 3px var(--color-shadow-accent-very-light);
 }
 
 .formInputError {
   border-color: var(--color-accent-red);
-  box-shadow: 0 0 0 2px rgba(185, 28, 28, 0.2);
+  box-shadow: 0 0 0 2px rgb(185 28 28 / 20%);
 }
 
 .formInputError:focus {
   border-color: var(--color-accent-red);
-  box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.2);
+  box-shadow: 0 0 0 3px rgb(185 28 28 / 20%);
 }
 
 .formInput::placeholder {
@@ -107,7 +118,6 @@
 .settingsHint {
   margin-top: var(--spacing-3xl);
   font-size: var(--font-size-sm);
-  color: var(--color-text-placeholder);
   line-height: 1.5;
+  color: var(--color-text-placeholder);
 }
-

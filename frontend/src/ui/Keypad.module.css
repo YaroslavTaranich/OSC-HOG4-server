@@ -1,9 +1,10 @@
 .keypad {
   display: flex;
-  width: fit-content;
-  margin: 0 auto;
   flex-direction: column;
   gap: 8px;
+
+  width: fit-content;
+  margin: 0 auto;
 }
 
 .keypadRow {
@@ -24,13 +25,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
-  height: 100%;
   justify-content: space-between;
+
+  height: 100%;
 }
 
 .keypadSideBtn {
-  height: var(--size-keypad-side-btn-height);
   min-width: var(--size-keypad-side-btn-min-width);
+  height: var(--size-keypad-side-btn-height);
 }
 
 .keypadBlock {
@@ -44,14 +46,13 @@
   /* Styles for last row if needed */
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .keypadBlock {
     grid-template-columns: 1fr;
   }
 
   .keypadSide {
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
     justify-content: center;
   }
 
@@ -60,4 +61,3 @@
     min-width: var(--size-keypad-side-btn-min-width);
   }
 }
-

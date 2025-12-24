@@ -1,10 +1,11 @@
 import React, {
-    createContext, PropsWithChildren,
-    useCallback,
-    useContext,
-    useEffect,
-    useRef,
-    useState
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
 } from 'react';
 
 type Status = 'connecting' | 'open' | 'closed';
@@ -25,10 +26,7 @@ interface HogWebSocketProviderProps extends PropsWithChildren {
   url: string;
 }
 
-export const HogWebSocketProvider: React.FC<HogWebSocketProviderProps> = ({
-  url,
-  children
-}) => {
+export const HogWebSocketProvider: React.FC<HogWebSocketProviderProps> = ({ url, children }) => {
   const [status, setStatus] = useState<Status>('connecting');
   const [oscError, setOscError] = useState(false);
   const socketRef = useRef<WebSocket | null>(null);
@@ -107,12 +105,11 @@ export const HogWebSocketProvider: React.FC<HogWebSocketProviderProps> = ({
     }
   }, []);
 
-
   return (
     <HogWebSocketContext.Provider value={{ status, oscError, send }}>
       {children}
     </HogWebSocketContext.Provider>
-  )
+  );
 };
 
 /* ---------- hook ---------- */

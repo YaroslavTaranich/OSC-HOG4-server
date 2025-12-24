@@ -2,8 +2,8 @@ import React from 'react';
 import classNames from 'classnames';
 import { EncoderStrip } from '../ui/EncoderStrip';
 import { Keypad } from '../ui/Keypad';
-import { HogButton } from "../ui/HogButton";
-import { useHogWebSocket } from "../hooks/useHogWebSocket";
+import { HogButton } from '../ui/HogButton';
+import { useHogWebSocket } from '../hooks/useHogWebSocket';
 import styles from './ProgrammerScreen.module.css';
 import commonStyles from '../styles/common.module.css';
 import buttonStyles from '../ui/HogButton.module.css';
@@ -15,7 +15,7 @@ const PARAM_SELECTION_KEYS: { label: string; key: string }[] = [
   { label: 'BEAM', key: 'BEAM' },
   { label: 'EFFECT', key: 'EFFECT' },
   { label: 'GROUP', key: 'GROUP' },
-  { label: 'FIXTURE', key: 'FIXTURE' }
+  { label: 'FIXTURE', key: 'FIXTURE' },
 ];
 const SETUP_KEYS = ['SETUP', 'GOTO', 'SET', 'PIG', 'FAN', 'OPEN'];
 const LIVE_SCENE_KEYS = ['LIVE', 'SCENE', 'CUE', 'MACRO', 'LIST', 'PAGE'];
@@ -24,7 +24,7 @@ const HIGHLIGHT_KEYS = ['HIGHLIGHT', 'BLIND', 'CLEAR'];
 const NAV_KEYS = ['NEXT', 'ALL', 'BACK'];
 
 export const ProgrammerScreen: React.FC = () => {
-  const { send } = useHogWebSocket()
+  const { send } = useHogWebSocket();
 
   const handleEncoder = (index: number, delta: number) => {
     send({ type: 'encoder', encoder: index + 1, delta });
@@ -38,13 +38,23 @@ export const ProgrammerScreen: React.FC = () => {
 
   return (
     <div className={classNames(commonStyles.screen, commonStyles.screenProgrammer)}>
-      <section className={classNames(commonStyles.screenSection, styles.sectionParams, styles.sectionHighlight)}>
+      <section
+        className={classNames(
+          commonStyles.screenSection,
+          styles.sectionParams,
+          styles.sectionHighlight,
+        )}
+      >
         <div className={commonStyles.sectionTitle}>Highlight</div>
         <div className={styles.paramsRow}>
           {HIGHLIGHT_KEYS.map((k) => (
             <HogButton
               key={k}
-              className={classNames(buttonStyles.btnPrimary, commonStyles.playbackSquare, commonStyles.playbackSquareDouble)}
+              className={classNames(
+                buttonStyles.btnPrimary,
+                commonStyles.playbackSquare,
+                commonStyles.playbackSquareDouble,
+              )}
               buttonKey={k}
             >
               {k}
@@ -53,13 +63,19 @@ export const ProgrammerScreen: React.FC = () => {
         </div>
       </section>
 
-      <section className={classNames(commonStyles.screenSection, styles.sectionParams, styles.sectionNav)}>
+      <section
+        className={classNames(commonStyles.screenSection, styles.sectionParams, styles.sectionNav)}
+      >
         <div className={commonStyles.sectionTitle}>Navigation</div>
         <div className={styles.paramsRow}>
           {NAV_KEYS.map((k) => (
             <HogButton
               key={k}
-              className={classNames(buttonStyles.btnPrimary, commonStyles.playbackSquare, commonStyles.playbackSquareDouble)}
+              className={classNames(
+                buttonStyles.btnPrimary,
+                commonStyles.playbackSquare,
+                commonStyles.playbackSquareDouble,
+              )}
               buttonKey={k}
             >
               {k}
@@ -85,7 +101,12 @@ export const ProgrammerScreen: React.FC = () => {
 
       <section className={classNames(commonStyles.screenSection, styles.sectionEncoders)}>
         <div className={commonStyles.sectionTitle}>Encoders</div>
-        <EncoderStrip count={4} onChange={handleEncoder} onStart={handleEncoderStart} onEnd={handleEncoderEnd} />
+        <EncoderStrip
+          count={4}
+          onChange={handleEncoder}
+          onStart={handleEncoderStart}
+          onEnd={handleEncoderEnd}
+        />
       </section>
 
       <section className={classNames(commonStyles.screenSection, styles.sectionKeypad)}>
@@ -140,6 +161,3 @@ export const ProgrammerScreen: React.FC = () => {
     </div>
   );
 };
-
-
-
