@@ -1,6 +1,10 @@
 import React, { useMemo, useRef, useState } from 'react';
+import classNames from 'classnames';
 import { useHogWebSocket } from '../hooks/useHogWebSocket';
 import { HogButton } from '../ui/HogButton';
+import styles from './PlaybacksScreen.module.css';
+import commonStyles from '../styles/common.module.css';
+import buttonStyles from '../ui/HogButton.module.css';
 
 const TOTAL_PLAYBACKS = 100;
 const PAGE_SIZE = 10;
@@ -95,10 +99,10 @@ const VerticalFader: React.FC<VerticalFaderProps> = ({
   };
 
   return (
-    <div className="playback-fader">
+    <div className={styles.playbackFader}>
       <div
         ref={trackRef}
-        className="playback-fader__track"
+        className={styles.playbackFaderTrack}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerEnd}
@@ -106,7 +110,7 @@ const VerticalFader: React.FC<VerticalFaderProps> = ({
         onPointerLeave={handlePointerEnd}
         onWheel={handleWheel}
       >
-        <div className="playback-fader__thumb" style={{ bottom: `${value}%` }} />
+        <div className={styles.playbackFaderThumb} style={{ bottom: `${value}%` }} />
       </div>
     </div>
   );
@@ -145,21 +149,23 @@ export const PlaybacksScreen: React.FC = () => {
   };
 
   return (
-    <div className="screen screen--playbacks">
-      <section className="screen-section">
-        <div className="section-title">Page</div>
-        <div className="playback-pages">
+    <div className={classNames(commonStyles.screen, commonStyles.screenPlaybacks)}>
+      <section className={commonStyles.screenSection}>
+        <div className={commonStyles.sectionTitle}>Page</div>
+        <div className={styles.playbackPages}>
           {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
             <button
               key={p}
-              className={`btn btn--secondary playback-page-btn ${page === p ? 'playback-btn--active' : ''}`}
+              className={classNames(buttonStyles.btn, buttonStyles.btnSecondary, styles.playbackPageBtn, {
+                [commonStyles.playbackBtnActive]: page === p
+              })}
               onClick={() => setPage(p)}
             >
               {p}
             </button>
           ))}
         </div>
-        <div className="playback-pages-select">
+        <div className={styles.playbackPagesSelect}>
           <select value={page} onChange={(e) => setPage(Number(e.target.value))}>
             {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
               <option key={p} value={p}>
@@ -170,52 +176,52 @@ export const PlaybacksScreen: React.FC = () => {
         </div>
       </section>
 
-      <section className="screen-section">
-        <div className="section-title">
+      <section className={commonStyles.screenSection}>
+        <div className={commonStyles.sectionTitle}>
           Playbacks {(page - 1) * PAGE_SIZE + 1} – {Math.min(page * PAGE_SIZE, TOTAL_PLAYBACKS)}
         </div>
-        <div className="playback-faders">
+        <div className={styles.playbackFaders}>
           {currentPlaybacks.map((n) => {
             const level = levels[n] ?? 0;
             return (
-              <div key={n} className="playback-card playback-card--vertical">
-                <div className="playback-card__header">
-                  <span className="playback-card__label">PB {n}</span>
+              <div key={n} className={classNames(styles.playbackCard, styles.playbackCardVertical)}>
+                <div className={styles.playbackCardHeader}>
+                  <span className={styles.playbackCardLabel}>PB {n}</span>
                 </div>
-                <div className="playback-card__value playback-card__value--below">{level.toFixed(0)}%</div>
+                <div className={classNames(styles.playbackCardValue, styles.playbackCardValueBelow)}>{level.toFixed(0)}%</div>
 
-                <div className="playback-vertical-stack">
+                <div className={styles.playbackVerticalStack}>
                   <HogButton
-                    className="btn btn--danger playback-square"
+                    className={classNames(buttonStyles.btnDanger, commonStyles.playbackSquare)}
                     buttonKey={`choose/${n}`}
                   >
                     CHOOSE
                   </HogButton>
                   <HogButton
-                    className="btn btn--accent playback-square"
+                    className={classNames(buttonStyles.btnAccent, commonStyles.playbackSquare)}
                     buttonKey={`go/${n}`}
                   >
                     GO
                   </HogButton>
                   <HogButton
-                    className="btn btn--secondary playback-square"
+                    className={classNames(buttonStyles.btnSecondary, commonStyles.playbackSquare)}
                     buttonKey={`pause/${n}`}
                   >
                     PAUSE
                   </HogButton>
                   <HogButton
-                    className="btn btn--secondary playback-square"
+                    className={classNames(buttonStyles.btnSecondary, commonStyles.playbackSquare)}
                     buttonKey={`goback/${n}`}
                   >
                     BACK
                   </HogButton>
 
-                  <div className="playback-slider-wrapper">
+                  <div className={styles.playbackSliderWrapper}>
                   <VerticalFader value={level} onChange={(val) => handleSliderChange(n, val)} onStart={() => handleSliderStart(n)} onEnd={() => handleSliderEnd(n)} />
                   </div>
 
                   <HogButton
-                    className="btn btn--secondary playback-square"
+                    className={classNames(buttonStyles.btnSecondary, commonStyles.playbackSquare)}
                     buttonKey={`flash/${n}`}
                   >
                     FLASH

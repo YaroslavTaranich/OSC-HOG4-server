@@ -1,0 +1,102 @@
+:root {
+  /* Colors - Backgrounds */
+  --color-bg-primary: #05070a;
+  --color-bg-secondary: #020617;
+  --color-bg-tertiary: #0b1220;
+  --color-bg-card: #020617;
+  --color-bg-header: radial-gradient(circle at top left, #1f4fff, #02030a);
+
+  /* Colors - Text */
+  --color-text-primary: #f5f7fb;
+  --color-text-secondary: #e5e7eb;
+  --color-text-tertiary: #cbd5e1;
+  --color-text-muted: #9ca3af;
+  --color-text-placeholder: #6b7280;
+
+  /* Colors - Accents */
+  --color-accent-primary: #38bdf8;
+  --color-accent-blue: #0ea5e9;
+  --color-accent-green: #16a34a;
+  --color-accent-red: #b91c1c;
+  --color-accent-indigo: #4338ca;
+
+  /* Colors - Buttons */
+  --color-btn-primary-start: #1f2937;
+  --color-btn-primary-end: #0f172a;
+  --color-btn-secondary-start: #020617;
+  --color-btn-secondary-end: #363943;
+  --color-btn-accent-start: #1ea04e;
+  --color-btn-accent-end: #075122;
+  --color-btn-danger-start: #5f1e1e;
+  --color-btn-danger-end: #4a0505;
+
+  /* Colors - Borders */
+  --color-border-primary: #1f2937;
+  --color-border-accent: #38bdf8;
+
+  /* Colors - Shadows */
+  --color-shadow-primary: rgba(15, 23, 42, 0.7);
+  --color-shadow-accent: rgba(56, 189, 248, 0.3);
+  --color-shadow-accent-light: rgba(56, 189, 248, 0.25);
+  --color-shadow-accent-very-light: rgba(56, 189, 248, 0.1);
+  --color-shadow-accent-bg: rgba(56, 189, 248, 0.05);
+
+  /* Spacing */
+  --spacing-xs: 0.2rem;
+  --spacing-sm: 0.3rem;
+  --spacing-md: 0.4rem;
+  --spacing-lg: 0.5rem;
+  --spacing-xl: 0.6rem;
+  --spacing-2xl: 0.75rem;
+  --spacing-3xl: 1rem;
+  --spacing-4xl: 1.4rem;
+
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.6rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 12px;
+  --radius-full: 999px;
+
+  /* Font Sizes */
+  --font-size-xs: 0.7rem;
+  --font-size-sm: 0.75rem;
+  --font-size-base: 0.85rem;
+  --font-size-lg: 1rem;
+
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Letter Spacing */
+  --letter-spacing-wide: 0.08em;
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.7);
+  --shadow-inset: inset 0 2px 8px rgba(0, 0, 0, 0.6);
+
+  /* Sizes */
+  --size-encoder-width: 90%;
+  --size-encoder-thumb-height: 30px;
+  --size-fader-width: 70px;
+  --size-fader-height: 350px;
+  --size-fader-thumb-height: 30px;
+  --size-playback-square: 70px;
+  --size-playback-square-double: 160px;
+  --size-btn-flash: 120px;
+  --size-keypad-key: 80px;
+  --size-keypad-side-btn-height: 48px;
+  --size-keypad-side-btn-min-width: 120px;
+
+  /* Breakpoints (for reference, used in media queries) */
+  --breakpoint-mobile: 768px;
+  --breakpoint-tablet: 1024px;
+}
+

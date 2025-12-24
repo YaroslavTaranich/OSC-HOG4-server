@@ -1,8 +1,12 @@
 import React from 'react';
+import classNames from 'classnames';
 import { EncoderStrip } from '../ui/EncoderStrip';
 import { Keypad } from '../ui/Keypad';
 import { HogButton } from "../ui/HogButton";
 import { useHogWebSocket } from "../hooks/useHogWebSocket";
+import styles from './ProgrammerScreen.module.css';
+import commonStyles from '../styles/common.module.css';
+import buttonStyles from '../ui/HogButton.module.css';
 
 const PARAM_SELECTION_KEYS: { label: string; key: string }[] = [
   { label: 'INT', key: 'INTENSITY' },
@@ -33,14 +37,14 @@ export const ProgrammerScreen: React.FC = () => {
   };
 
   return (
-    <div className="screen screen--programmer">
-      <section className="screen-section section-params section-highlight">
-        <div className="section-title">Highlight</div>
-        <div className="params-row">
+    <div className={classNames(commonStyles.screen, commonStyles.screenProgrammer)}>
+      <section className={classNames(commonStyles.screenSection, styles.sectionParams, styles.sectionHighlight)}>
+        <div className={commonStyles.sectionTitle}>Highlight</div>
+        <div className={styles.paramsRow}>
           {HIGHLIGHT_KEYS.map((k) => (
             <HogButton
               key={k}
-              className="btn btn--primary playback-square playback-square--double"
+              className={classNames(buttonStyles.btnPrimary, commonStyles.playbackSquare, commonStyles.playbackSquareDouble)}
               buttonKey={k}
             >
               {k}
@@ -49,13 +53,13 @@ export const ProgrammerScreen: React.FC = () => {
         </div>
       </section>
 
-      <section className="screen-section section-params section-nav">
-        <div className="section-title">Navigation</div>
-        <div className="params-row">
+      <section className={classNames(commonStyles.screenSection, styles.sectionParams, styles.sectionNav)}>
+        <div className={commonStyles.sectionTitle}>Navigation</div>
+        <div className={styles.paramsRow}>
           {NAV_KEYS.map((k) => (
             <HogButton
               key={k}
-              className="btn btn--primary playback-square playback-square--double"
+              className={classNames(buttonStyles.btnPrimary, commonStyles.playbackSquare, commonStyles.playbackSquareDouble)}
               buttonKey={k}
             >
               {k}
@@ -64,13 +68,13 @@ export const ProgrammerScreen: React.FC = () => {
         </div>
       </section>
 
-      <section className="screen-section section-params">
-        <div className="section-title">Parameters / Selection</div>
-        <div className="params-row">
+      <section className={classNames(commonStyles.screenSection, styles.sectionParams)}>
+        <div className={commonStyles.sectionTitle}>Parameters / Selection</div>
+        <div className={styles.paramsRow}>
           {PARAM_SELECTION_KEYS.map((item) => (
             <HogButton
               key={item.key}
-              className="btn btn--primary playback-square"
+              className={classNames(buttonStyles.btnPrimary, commonStyles.playbackSquare)}
               buttonKey={item.key}
             >
               {item.label}
@@ -79,25 +83,23 @@ export const ProgrammerScreen: React.FC = () => {
         </div>
       </section>
 
-      <section className="screen-section section-encoders">
-        <div className="section-title">Encoders</div>
+      <section className={classNames(commonStyles.screenSection, styles.sectionEncoders)}>
+        <div className={commonStyles.sectionTitle}>Encoders</div>
         <EncoderStrip count={4} onChange={handleEncoder} onStart={handleEncoderStart} onEnd={handleEncoderEnd} />
       </section>
 
-      <section className="screen-section section-keypad">
-        <div className="section-title">Keypad</div>
+      <section className={classNames(commonStyles.screenSection, styles.sectionKeypad)}>
+        <div className={commonStyles.sectionTitle}>Keypad</div>
         <Keypad />
       </section>
 
-
-
-      <section className="screen-section section-params">
-        <div className="section-title">Setup</div>
-        <div className="params-row">
+      <section className={classNames(commonStyles.screenSection, styles.sectionParams)}>
+        <div className={commonStyles.sectionTitle}>Setup</div>
+        <div className={styles.paramsRow}>
           {SETUP_KEYS.map((k) => (
             <HogButton
               key={k}
-              className="btn btn--primary playback-square"
+              className={classNames(buttonStyles.btnPrimary, commonStyles.playbackSquare)}
               buttonKey={k}
             >
               {k}
@@ -106,15 +108,13 @@ export const ProgrammerScreen: React.FC = () => {
         </div>
       </section>
 
-
-
-      <section className="screen-section section-params">
-        <div className="section-title">Live / Scene</div>
-        <div className="params-row">
+      <section className={classNames(commonStyles.screenSection, styles.sectionParams)}>
+        <div className={commonStyles.sectionTitle}>Live / Scene</div>
+        <div className={styles.paramsRow}>
           {LIVE_SCENE_KEYS.map((k) => (
             <HogButton
               key={k}
-              className="btn btn--primary playback-square"
+              className={classNames(buttonStyles.btnPrimary, commonStyles.playbackSquare)}
               buttonKey={k}
             >
               {k}
@@ -123,13 +123,13 @@ export const ProgrammerScreen: React.FC = () => {
         </div>
       </section>
 
-      <section className="screen-section section-params">
-        <div className="section-title">Edit</div>
-        <div className="params-row">
+      <section className={classNames(commonStyles.screenSection, styles.sectionParams)}>
+        <div className={commonStyles.sectionTitle}>Edit</div>
+        <div className={styles.paramsRow}>
           {EDIT_KEYS.map((k) => (
             <HogButton
               key={k}
-              className="btn btn--primary playback-square"
+              className={classNames(buttonStyles.btnPrimary, commonStyles.playbackSquare)}
               buttonKey={k}
             >
               {k}
@@ -137,8 +137,6 @@ export const ProgrammerScreen: React.FC = () => {
           ))}
         </div>
       </section>
-
-
     </div>
   );
 };

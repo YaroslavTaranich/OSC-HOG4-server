@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import styles from './EncoderStrip.module.css';
 
 interface EncoderStripProps {
   count: number;
@@ -135,14 +136,14 @@ export const EncoderStrip: React.FC<EncoderStripProps> = ({
   /* ---------------- render ---------------- */
 
   return (
-    <div className="encoder-strip">
+    <div className={styles.encoderStrip}>
       {Array.from({ length: count }, (_, i) => {
         const glow = Math.abs(intensity[i] ?? 0);
 
         return (
           <div
             key={i}
-            className="encoder"
+            className={styles.encoder}
             onWheel={(e) => handleWheel(i, e)}
             onPointerDown={(e) => handlePointerDown(i, e)}
             onPointerMove={(e) => handlePointerMove(i, e)}
@@ -150,14 +151,14 @@ export const EncoderStrip: React.FC<EncoderStripProps> = ({
             onPointerCancel={(e) => handlePointerEnd(i, e)}
             onPointerLeave={(e) => handlePointerEnd(i, e)}
           >
-            <div className="encoder-fader">
+            <div className={styles.encoderFader}>
               <div
                 ref={(el) => (trackRefs.current[i] = el)}
-                className="encoder-fader__track"
+                className={styles.encoderFaderTrack}
               >
-                <div className="encoder-fader__centerline" />
+                <div className={styles.encoderFaderCenterline} />
                 <div
-                  className="encoder-fader__thumb"
+                  className={styles.encoderFaderThumb}
                   style={{
                     top: `${(0.5 - (currentNorm.current[i] || 0) / 2) * 100}%`,
                     boxShadow: `0 4px 12px rgba(0,0,0,0.6),

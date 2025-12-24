@@ -1,25 +1,37 @@
 import React, { useMemo } from 'react';
 import { Navigate, NavLink, Route, Routes } from 'react-router-dom';
+import classNames from 'classnames';
 import { HogWebSocketProvider, useHogWebSocket } from './hooks/useHogWebSocket';
 import { ProgrammerScreen } from './screens/ProgrammerScreen';
 import { PlaybacksScreen } from './screens/PlaybacksScreen';
 import { ButtonsScreen } from './screens/ButtonsScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
+import styles from './App.module.css';
 
 const AppLayout: React.FC = () => {
   const { status } = useHogWebSocket();
 
   const makeTabClassName = ({ isActive }: { isActive: boolean }) =>
-    `tab-btn ${isActive ? 'tab-btn--active' : ''}`;
+    classNames(styles.tabBtn, {
+      [styles.tabBtnActive]: isActive
+    });
+
+  const statusClassMap: Record<string, string> = {
+    connecting: styles.appStatusConnecting,
+    open: styles.appStatusOpen,
+    closed: styles.appStatusClosed
+  };
 
   return (
-    <div className="app-root">
-      <header className="app-header">
-        <div className="app-title">Hog OSC Remote</div>
-        <div className={`app-status app-status--${status}`}>{status.toUpperCase()}</div>
+    <div className={styles.appRoot}>
+      <header className={styles.appHeader}>
+        <div className={styles.appTitle}>Hog OSC Remote</div>
+        <div className={classNames(styles.appStatus, statusClassMap[status])}>
+          {status.toUpperCase()}
+        </div>
       </header>
 
-      <nav className="app-tabs">
+      <nav className={styles.appTabs}>
         <NavLink to="/programmer" className={makeTabClassName}>
           Programmer
         </NavLink>
@@ -34,7 +46,7 @@ const AppLayout: React.FC = () => {
         </NavLink>
       </nav>
 
-      <main className="app-main">
+      <main className={styles.appMain}>
         <Routes>
           <Route path="/" element={<ProgrammerScreen />} />
           <Route path="/programmer" element={<ProgrammerScreen />} />

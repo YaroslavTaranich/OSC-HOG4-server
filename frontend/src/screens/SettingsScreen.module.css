@@ -1,0 +1,111 @@
+.settingsForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3xl);
+}
+
+.formRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3xl);
+}
+
+.formLabel {
+  width: 200px;
+  flex-shrink: 0;
+  font-size: var(--font-size-base);
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-medium);
+}
+
+.formInput {
+  flex: 1;
+  min-width: 0;
+  padding: var(--spacing-xl) var(--spacing-2xl);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-primary);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.notification {
+  padding: var(--spacing-xl) var(--spacing-2xl);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-2xl);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  animation: slideIn 0.3s ease-out;
+}
+
+.notificationSuccess {
+  background: rgba(22, 163, 74, 0.15);
+  border: 1px solid var(--color-accent-green);
+  color: var(--color-accent-green);
+}
+
+.notificationError {
+  background: rgba(185, 28, 28, 0.15);
+  border: 1px solid var(--color-accent-red);
+  color: var(--color-accent-red);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .formRow {
+    flex-wrap: nowrap;
+    gap: var(--spacing-lg);
+    width: 100%;
+  }
+
+  .formLabel {
+    width: 170px;
+    flex-shrink: 0;
+  }
+
+  .formInput {
+    flex: 1;
+    min-width: 0;
+    max-width: calc(100% - 170px - var(--spacing-lg));
+  }
+}
+
+.formInput:focus {
+  outline: none;
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 3px var(--color-shadow-accent-very-light);
+}
+
+.formInputError {
+  border-color: var(--color-accent-red);
+  box-shadow: 0 0 0 2px rgba(185, 28, 28, 0.2);
+}
+
+.formInputError:focus {
+  border-color: var(--color-accent-red);
+  box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.2);
+}
+
+.formInput::placeholder {
+  color: var(--color-text-placeholder);
+}
+
+.settingsHint {
+  margin-top: var(--spacing-3xl);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-placeholder);
+  line-height: 1.5;
+}
+

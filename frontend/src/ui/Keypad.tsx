@@ -1,5 +1,9 @@
 import React from 'react';
+import classNames from 'classnames';
 import { HogButton } from './HogButton';
+import styles from './Keypad.module.css';
+import buttonStyles from './HogButton.module.css';
+import commonStyles from '../styles/common.module.css';
 
 
 type KeyDef = {
@@ -43,18 +47,26 @@ const ROWS: KeyDef[][] = [
 export const Keypad: React.FC = () => {
 
   return (
-    <div className="keypad">
+    <div className={styles.keypad}>
       {ROWS.map((row, idx) => (
         <div
           key={idx}
-          className={`keypad-row ${idx === ROWS.length - 1 ? 'keypad-row--last' : ''}`}
+          className={classNames(styles.keypadRow, {
+            [styles.keypadRowLast]: idx === ROWS.length - 1
+          })}
         >
           {row.map(({ label, key, span }) => (
             <HogButton
               key={key + String(span ?? 1)}
-              className={`btn btn--secondary keypad-key playback-square ${
-                span === 2 ? 'playback-square--double keypad-key--enter' : ''
-              }`}
+              className={classNames(
+                buttonStyles.btnSecondary,
+                styles.keypadKey,
+                commonStyles.playbackSquare,
+                {
+                  [commonStyles.playbackSquareDouble]: span === 2,
+                  [styles.keypadKeyEnter]: span === 2
+                }
+              )}
               style={span === 2 ? { gridColumn: 'span 2' } : undefined}
               buttonKey={key}
             >

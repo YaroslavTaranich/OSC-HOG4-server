@@ -1,0 +1,36 @@
+.sectionEncoders {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sectionParams {
+  /* Base styles for params section */
+}
+
+.paramsRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.sectionHighlight .paramsRow,
+.sectionNav .paramsRow {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-lg);
+}
+
+.sectionHighlight {
+  /* Additional styles for highlight section */
+}
+
+.sectionNav {
+  /* Additional styles for nav section */
+}
+
+.sectionKeypad {
+  /* Additional styles for keypad section */
+}
+
+

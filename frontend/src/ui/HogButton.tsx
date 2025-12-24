@@ -1,5 +1,7 @@
 import { PropsWithChildren, useRef } from "react";
+import classNames from "classnames";
 import { useHogWebSocket } from "../hooks/useHogWebSocket";
+import styles from "./HogButton.module.css";
 
 interface HogButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     buttonKey: string;
@@ -8,6 +10,7 @@ interface HogButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export const HogButton: React.FC<HogButtonProps> = ({
     children,
     buttonKey,
+    className,
     ...props
 }) => {
     const { send } = useHogWebSocket()
@@ -38,6 +41,7 @@ export const HogButton: React.FC<HogButtonProps> = ({
     return (
         <button
             {...props}
+            className={classNames(styles.btn, className)}
             onPointerDown={start}
             onPointerUp={end}
             onPointerLeave={end}

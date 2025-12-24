@@ -1,0 +1,63 @@
+.keypad {
+  display: flex;
+  width: fit-content;
+  margin: 0 auto;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.keypadRow {
+  display: grid;
+  grid-template-columns: repeat(4, var(--size-keypad-key));
+  gap: 8px;
+}
+
+.keypadKey {
+  padding: 0;
+}
+
+.keypadKeyEnter {
+  /* Additional styles for enter key if needed */
+}
+
+.keypadSide {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  height: 100%;
+  justify-content: space-between;
+}
+
+.keypadSideBtn {
+  height: var(--size-keypad-side-btn-height);
+  min-width: var(--size-keypad-side-btn-min-width);
+}
+
+.keypadBlock {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) auto;
+  gap: var(--spacing-lg);
+  align-items: stretch;
+}
+
+.keypadRowLast {
+  /* Styles for last row if needed */
+}
+
+@media (max-width: 768px) {
+  .keypadBlock {
+    grid-template-columns: 1fr;
+  }
+
+  .keypadSide {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .keypadSideBtn {
+    flex: 1 1 45%;
+    min-width: var(--size-keypad-side-btn-min-width);
+  }
+}
+

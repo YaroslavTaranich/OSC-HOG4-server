@@ -1,0 +1,103 @@
+.appRoot {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.appHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-2xl) var(--spacing-3xl);
+  background: var(--color-bg-header);
+  color: #fff;
+}
+
+.appTitle {
+  font-weight: var(--font-weight-semibold);
+}
+
+.appStatus {
+  padding: var(--spacing-xs) var(--spacing-xl);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.appStatusConnecting {
+  background: var(--color-accent-indigo);
+}
+.appStatusOpen {
+  background: var(--color-accent-green);
+}
+.appStatusClosed {
+  background: var(--color-accent-red);
+}
+
+.appTabs {
+  display: flex;
+  border-bottom: 1px solid #111827;
+  background: var(--color-bg-secondary);
+}
+
+.tabBtn {
+  flex: 1;
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  background: transparent;
+  color: var(--color-text-muted);
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.tabBtn:hover {
+  color: var(--color-text-tertiary);
+  background: var(--color-shadow-accent-bg);
+}
+
+.tabBtnActive {
+  color: var(--color-text-secondary);
+  border-bottom-color: var(--color-accent-primary);
+  background: var(--color-shadow-accent-very-light);
+  font-weight: var(--font-weight-semibold);
+}
+
+.tabBtnActive::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-accent-primary), transparent);
+  opacity: 0.3;
+}
+
+.appMain {
+  flex: 1;
+  padding: var(--spacing-2xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+}
+
+@media (orientation: landscape) and (max-width: 1024px) {
+  .appRoot {
+    flex-direction: row;
+  }
+  .appHeader {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    gap: var(--spacing-2xl);
+  }
+  .appMain {
+    flex: 1;
+  }
+}
+
