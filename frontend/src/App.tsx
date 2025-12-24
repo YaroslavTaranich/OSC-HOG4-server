@@ -9,7 +9,7 @@ import { SettingsScreen } from './screens/SettingsScreen';
 import styles from './App.module.css';
 
 const AppLayout: React.FC = () => {
-  const { status } = useHogWebSocket();
+  const { status, oscError } = useHogWebSocket();
 
   const makeTabClassName = ({ isActive }: { isActive: boolean }) =>
     classNames(styles.tabBtn, {
@@ -22,12 +22,15 @@ const AppLayout: React.FC = () => {
     closed: styles.appStatusClosed
   };
 
+  const headerStatusLabel = oscError ? 'OSC CONNECTION ERROR' : status.toUpperCase();
+  const headerStatusClass = oscError ? styles.appStatusError : statusClassMap[status];
+
   return (
     <div className={styles.appRoot}>
       <header className={styles.appHeader}>
         <div className={styles.appTitle}>Hog OSC Remote</div>
-        <div className={classNames(styles.appStatus, statusClassMap[status])}>
-          {status.toUpperCase()}
+        <div className={classNames(styles.appStatus, headerStatusClass)}>
+          {headerStatusLabel}
         </div>
       </header>
 

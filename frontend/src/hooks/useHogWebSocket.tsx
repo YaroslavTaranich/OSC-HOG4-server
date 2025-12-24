@@ -11,6 +11,7 @@ type Status = 'connecting' | 'open' | 'closed';
 
 interface HogWebSocketContextValue {
   status: Status;
+  oscError: boolean;
   send: (payload: unknown) => void;
 }
 
@@ -29,6 +30,7 @@ export const HogWebSocketProvider: React.FC<HogWebSocketProviderProps> = ({
   children
 }) => {
   const [status, setStatus] = useState<Status>('connecting');
+  const [oscError, setOscError] = useState(false);
   const socketRef = useRef<WebSocket | null>(null);
   const reconnectTimeout = useRef<number | null>(null);
 
@@ -45,6 +47,8 @@ export const HogWebSocketProvider: React.FC<HogWebSocketProviderProps> = ({
       ws.onopen = () => {
         if (isUnmounted) return;
         setStatus('open');
+        // Clear OSC error state on successful WS reconnect
+        setOscError(false);
       };
 
       ws.onclose = () => {
@@ -62,8 +66,24 @@ export const HogWebSocketProvider: React.FC<HogWebSocketProviderProps> = ({
         ws.close();
       };
 
-      ws.onmessage = () => {
-        // optional debug / hello
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          switch (data?.type) {
+            case 'osc_error':
+              setOscError(true);
+              break;
+            case 'osc_config_ok':
+            case 'hello':
+              setOscError(false);
+              break;
+            default:
+              // ignore other message types
+              break;
+          }
+        } catch {
+          // ignore non-JSON messages
+        }
       };
     };
 
@@ -89,7 +109,7 @@ export const HogWebSocketProvider: React.FC<HogWebSocketProviderProps> = ({
 
 
   return (
-    <HogWebSocketContext.Provider value={{ status, send }}>
+    <HogWebSocketContext.Provider value={{ status, oscError, send }}>
       {children}
     </HogWebSocketContext.Provider>
   )

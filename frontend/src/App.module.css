@@ -34,6 +34,10 @@
   background: var(--color-accent-red);
 }
 
+.appStatusError {
+  background: radial-gradient(circle at top, #b91c1c, #4a0505);
+}
+
 .appTabs {
   display: flex;
   border-bottom: 1px solid #111827;

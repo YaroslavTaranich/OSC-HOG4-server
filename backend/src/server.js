@@ -31,6 +31,29 @@ oscPort.on('ready', () => {
 
 oscPort.on('error', (err) => {
   console.error('OSC error:', err);
+  // Broadcast OSC error to all connected WebSocket clients
+  try {
+    const payload = {
+      type: 'osc_error',
+      message: err?.message || String(err),
+      code: err?.code,
+      address: HOG_OSC_HOST,
+      port: HOG_OSC_PORT
+    };
+    // wss is defined below; it will be initialized by the time errors can occur
+    wss?.clients?.forEach((client) => {
+      // 1 === WebSocket.OPEN (avoid direct dependency on WebSocket constant)
+      if (client.readyState === 1) {
+        try {
+          client.send(JSON.stringify(payload));
+        } catch (sendErr) {
+          console.error('Failed to send OSC error to client:', sendErr);
+        }
+      }
+    });
+  } catch (broadcastErr) {
+    console.error('Failed to broadcast OSC error:', broadcastErr);
+  }
 });
 
 // WebSocket server
