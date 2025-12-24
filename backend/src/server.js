@@ -123,15 +123,6 @@ function handleClientMessage(ws, rawData) {
       break;
     }
 
-    // обычные клавиши Programmer / Command Line
-    case 'keypress': {
-      const key = String(data.key || '').toUpperCase();
-      if (!key) return;
-      const address = `/hog/keypress/${key}`;
-      sendOscMessage(address);
-      break;
-    }
-
     // энкодеры
     case 'encoder_start': {
       const encoder = Number(data.encoder);
@@ -158,17 +149,6 @@ function handleClientMessage(ws, rawData) {
 
       sendOscMessage(address, [{ type: 'f', value: 0 }]);
 
-      break;
-    }
-
-    // плейбеки 1–30
-    case 'playback': {
-      const playback = Number(data.playback);
-      const action = String(data.action || '').toLowerCase();
-      if (!Number.isFinite(playback)) return;
-      if (!['go', 'back', 'release', 'flash'].includes(action)) return;
-      const address = `/hog/hardware/fader/${playback}/${action}`;
-      sendOscMessage(address);
       break;
     }
 

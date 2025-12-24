@@ -9,11 +9,8 @@ import buttonStyles from '../ui/HogButton.module.css';
 const TOTAL_PLAYBACKS = 100;
 const PAGE_SIZE = 10;
 
-type Action = 'go' | 'back' | 'release' | 'flash';
-
 const clamp = (v: number, min: number, max: number) =>
   Math.min(max, Math.max(min, v));
-
 
 interface VerticalFaderProps {
   value: number; // 0..100
@@ -127,10 +124,6 @@ export const PlaybacksScreen: React.FC = () => {
     const start = (page - 1) * PAGE_SIZE + 1;
     return Array.from({ length: PAGE_SIZE }, (_, i) => start + i).filter((n) => n <= TOTAL_PLAYBACKS);
   }, [page]);
-
-  const sendAction = (playback: number, action: Action) => {
-    send({ type: 'playback', playback, action });
-  };
 
   const sendFader = (playback: number, value: number) => {
     const normalized = value / 100;
