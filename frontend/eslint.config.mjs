@@ -3,10 +3,11 @@ import tseslint from 'typescript-eslint';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import prettier from 'eslint-config-prettier';
-
+import prettierConfig from 'eslint-config-prettier';
+import prettierPlugin from 'eslint-plugin-prettier';
 
 export default tseslint.config(
+    // --- ignores ---
     {
         ignores: [
             'dist',
@@ -14,16 +15,26 @@ export default tseslint.config(
             'vite.config.*'
         ]
     },
+
+    // --- base configs ---
     js.configs.recommended,
     ...tseslint.configs.recommended,
-    prettier,
+
+    // --- disable ESLint rules that conflict with Prettier ---
+    prettierConfig,
+
+    // --- Prettier as ESLint rule ---
     {
         files: ['**/*.{ts,tsx,js,jsx}'],
-        plugins: { 'prettier': require('eslint-plugin-prettier') },
+        plugins: {
+            prettier: prettierPlugin
+        },
         rules: {
-            'prettier/prettier': 'warn' // или 'error'
+            'prettier/prettier': 'warn' // можно поставить 'error'
         }
     },
+
+    // --- React + TS ---
     {
         files: ['**/*.{ts,tsx}'],
         plugins: {
@@ -55,7 +66,7 @@ export default tseslint.config(
                 { allowConstantExport: true }
             ],
 
-            // TS
+            // TypeScript
             '@typescript-eslint/no-unused-vars': [
                 'warn',
                 { argsIgnorePattern: '^_' }

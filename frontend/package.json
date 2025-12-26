@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:css": "stylelint \"src/**/*.{css,module.css}\"",
-    "lint:css:fix": "stylelint \"src/**/*.{css,module.css}\" --fix"
+    "lint:css:fix": "stylelint \"src/**/*.{css,module.css}\" --fix",
+    "fix": "npm run lint:fix && npm run lint:css:fix && npm run format"
   },
   "dependencies": {
     "classnames": "^2.5.1",
