@@ -1,11 +1,12 @@
 .encoderStrip {
   display: grid;
-  grid-template-columns: repeat(4, minmax(135px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   flex: 1;
   gap: var(--spacing-xl);
   align-items: stretch;
 
   width: 100%;
+  max-width: 100%;
 }
 
 .encoder {

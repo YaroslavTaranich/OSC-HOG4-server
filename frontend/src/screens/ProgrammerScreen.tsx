@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import { EncoderStrip } from '../ui/EncoderStrip';
 import { Keypad } from '../ui/Keypad';
 import { HogButton } from '../ui/HogButton';
-import { useHogWebSocket } from '../hooks/useHogWebSocket';
 import styles from './ProgrammerScreen.module.css';
 import commonStyles from '../styles/common.module.css';
 import buttonStyles from '../ui/HogButton.module.css';
@@ -24,18 +23,6 @@ const HIGHLIGHT_KEYS = ['HIGHLIGHT', 'BLIND', 'CLEAR'];
 const NAV_KEYS = ['NEXT', 'ALL', 'BACK'];
 
 export const ProgrammerScreen: React.FC = () => {
-  const { send } = useHogWebSocket();
-
-  const handleEncoder = (index: number, delta: number) => {
-    send({ type: 'encoder', encoder: index + 1, delta });
-  };
-  const handleEncoderStart = (index: number) => {
-    send({ type: 'encoder_start', encoder: index + 1 });
-  };
-  const handleEncoderEnd = (index: number) => {
-    send({ type: 'encoder_end', encoder: index + 1 });
-  };
-
   return (
     <div className={classNames(commonStyles.screen, commonStyles.screenProgrammer)}>
       <section
@@ -101,12 +88,7 @@ export const ProgrammerScreen: React.FC = () => {
 
       <section className={classNames(commonStyles.screenSection, styles.sectionEncoders)}>
         <div className={commonStyles.sectionTitle}>Encoders</div>
-        <EncoderStrip
-          count={4}
-          onChange={handleEncoder}
-          onStart={handleEncoderStart}
-          onEnd={handleEncoderEnd}
-        />
+        <EncoderStrip />
       </section>
 
       <section className={classNames(commonStyles.screenSection, styles.sectionKeypad)}>

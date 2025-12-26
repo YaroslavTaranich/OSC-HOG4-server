@@ -32,6 +32,7 @@
   flex-direction: row;
   gap: 10px;
   justify-content: center;
+
   padding-bottom: var(--spacing-sm);
 }
 
@@ -164,5 +165,9 @@
 
   .playbackCard {
     min-width: 70px;
+  }
+
+  .playbackFaders {
+    justify-content: flex-start;
   }
 }

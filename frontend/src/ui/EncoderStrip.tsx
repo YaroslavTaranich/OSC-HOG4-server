@@ -1,14 +1,14 @@
 import React, { useRef, useState } from 'react';
 import styles from './EncoderStrip.module.css';
+import { useEncoders } from '../hooks/useEncoders';
 
 interface EncoderStripProps {
-  count: number;
-  onStart: (index: number) => void;
-  onChange: (index: number, delta: number) => void;
-  onEnd: (index: number) => void;
+  count?: number;
 }
 
-export const EncoderStrip: React.FC<EncoderStripProps> = ({ count, onStart, onChange, onEnd }) => {
+export const EncoderStrip: React.FC<EncoderStripProps> = ({ count = 4 }) => {
+  const { onStart, onChange, onEnd } = useEncoders();
+
   const trackRefs = useRef<(HTMLDivElement | null)[]>(Array(count).fill(null));
 
   const activePointer = useRef<(number | null)[]>(Array(count).fill(null));
@@ -64,7 +64,7 @@ export const EncoderStrip: React.FC<EncoderStripProps> = ({ count, onStart, onCh
 
     activeInterval.current[index] = window.setInterval(() => {
       const norm = currentNorm.current[index] ?? 0;
-      const delta = norm * 0.08;
+      const delta = norm * 0.15;
       sendDelta(index, delta);
     }, 120);
   };

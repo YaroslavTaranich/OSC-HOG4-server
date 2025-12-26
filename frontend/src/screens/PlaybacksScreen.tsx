@@ -5,6 +5,8 @@ import { HogButton } from '../ui/HogButton';
 import styles from './PlaybacksScreen.module.css';
 import commonStyles from '../styles/common.module.css';
 import buttonStyles from '../ui/HogButton.module.css';
+import { HogChooseButton } from '../ui/HogChooseButton';
+import { ChooseButtonContextProvider } from '../hooks/useChooseButtonContext';
 
 const TOTAL_PLAYBACKS = 100;
 const PAGE_SIZE = 10;
@@ -112,98 +114,103 @@ export const PlaybacksScreen: React.FC = () => {
   };
 
   return (
-    <div className={classNames(commonStyles.screen, commonStyles.screenPlaybacks)}>
-      <section className={commonStyles.screenSection}>
-        <div className={commonStyles.sectionTitle}>Page</div>
-        <div className={styles.playbackPages}>
-          {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
-            <button
-              key={p}
-              className={classNames(
-                buttonStyles.btn,
-                buttonStyles.btnSecondary,
-                styles.playbackPageBtn,
-                {
-                  [commonStyles.playbackBtnActive]: page === p,
-                },
-              )}
-              onClick={() => setPage(p)}
-            >
-              {p}
-            </button>
-          ))}
-        </div>
-        <div className={styles.playbackPagesSelect}>
-          <select value={page} onChange={(e) => setPage(Number(e.target.value))}>
+    <ChooseButtonContextProvider>
+      <div className={classNames(commonStyles.screen, commonStyles.screenPlaybacks)}>
+        <section className={commonStyles.screenSection}>
+          <div className={commonStyles.sectionTitle}>Page</div>
+          <div className={styles.playbackPages}>
             {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
-              <option key={p} value={p}>
-                Page {p}
-              </option>
+              <button
+                key={p}
+                className={classNames(
+                  buttonStyles.btn,
+                  buttonStyles.btnSecondary,
+                  styles.playbackPageBtn,
+                  {
+                    [commonStyles.playbackBtnActive]: page === p,
+                  },
+                )}
+                onClick={() => setPage(p)}
+              >
+                {p}
+              </button>
             ))}
-          </select>
-        </div>
-      </section>
+          </div>
+          <div className={styles.playbackPagesSelect}>
+            <select value={page} onChange={(e) => setPage(Number(e.target.value))}>
+              {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
+                <option key={p} value={p}>
+                  Page {p}
+                </option>
+              ))}
+            </select>
+          </div>
+        </section>
 
-      <section className={commonStyles.screenSection}>
-        <div className={commonStyles.sectionTitle}>
-          Playbacks {(page - 1) * PAGE_SIZE + 1} – {Math.min(page * PAGE_SIZE, TOTAL_PLAYBACKS)}
-        </div>
-        <div className={styles.playbackFaders}>
-          {currentPlaybacks.map((n) => {
-            const level = levels[n] ?? 0;
-            return (
-              <div key={n} className={classNames(styles.playbackCard, styles.playbackCardVertical)}>
-                <div className={styles.playbackCardHeader}>
-                  <span className={styles.playbackCardLabel}>PB {n}</span>
-                </div>
+        <section className={commonStyles.screenSection}>
+          <div className={commonStyles.sectionTitle}>
+            Playbacks {(page - 1) * PAGE_SIZE + 1} – {Math.min(page * PAGE_SIZE, TOTAL_PLAYBACKS)}
+          </div>
+          <div className={styles.playbackFaders}>
+            {currentPlaybacks.map((n) => {
+              const level = levels[n] ?? 0;
+              return (
                 <div
-                  className={classNames(styles.playbackCardValue, styles.playbackCardValueBelow)}
+                  key={n}
+                  className={classNames(styles.playbackCard, styles.playbackCardVertical)}
                 >
-                  {level.toFixed(0)}%
-                </div>
-
-                <div className={styles.playbackVerticalStack}>
-                  <HogButton
-                    className={classNames(buttonStyles.btnDanger, commonStyles.playbackSquare)}
-                    buttonKey={`choose/${n}`}
+                  <div className={styles.playbackCardHeader}>
+                    <span className={styles.playbackCardLabel}>PB {n}</span>
+                  </div>
+                  <div
+                    className={classNames(styles.playbackCardValue, styles.playbackCardValueBelow)}
                   >
-                    CHOOSE
-                  </HogButton>
-                  <HogButton
-                    className={classNames(buttonStyles.btnAccent, commonStyles.playbackSquare)}
-                    buttonKey={`go/${n}`}
-                  >
-                    GO
-                  </HogButton>
-                  <HogButton
-                    className={classNames(buttonStyles.btnSecondary, commonStyles.playbackSquare)}
-                    buttonKey={`pause/${n}`}
-                  >
-                    PAUSE
-                  </HogButton>
-                  <HogButton
-                    className={classNames(buttonStyles.btnSecondary, commonStyles.playbackSquare)}
-                    buttonKey={`goback/${n}`}
-                  >
-                    BACK
-                  </HogButton>
-
-                  <div className={styles.playbackSliderWrapper}>
-                    <VerticalFader value={level} onChange={(val) => handleSliderChange(n, val)} />
+                    {level.toFixed(0)}%
                   </div>
 
-                  <HogButton
-                    className={classNames(buttonStyles.btnSecondary, commonStyles.playbackSquare)}
-                    buttonKey={`flash/${n}`}
-                  >
-                    FLASH
-                  </HogButton>
+                  <div className={styles.playbackVerticalStack}>
+                    <HogChooseButton
+                      className={classNames(buttonStyles.btnDanger, commonStyles.playbackSquare)}
+                      faderNumber={n}
+                    >
+                      CHOOSE
+                    </HogChooseButton>
+                    <HogButton
+                      className={classNames(buttonStyles.btnAccent, commonStyles.playbackSquare)}
+                      buttonKey={`go/${n}`}
+                    >
+                      GO
+                    </HogButton>
+                    <HogButton
+                      className={classNames(buttonStyles.btnSecondary, commonStyles.playbackSquare)}
+                      buttonKey={`pause/${n}`}
+                    >
+                      PAUSE
+                    </HogButton>
+                    <HogButton
+                      className={classNames(buttonStyles.btnSecondary, commonStyles.playbackSquare)}
+                      buttonKey={`goback/${n}`}
+                    >
+                      BACK
+                    </HogButton>
+
+                    <div className={styles.playbackSliderWrapper}>
+                      <VerticalFader value={level} onChange={(val) => handleSliderChange(n, val)} />
+                    </div>
+
+                    <HogButton
+                      className={classNames(buttonStyles.btnSecondary, commonStyles.playbackSquare)}
+                      buttonKey={`flash/${n}`}
+                    >
+                      FLASH
+                    </HogButton>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-    </div>
+              );
+            })}
+          </div>
+        </section>
+      </div>
+    </ChooseButtonContextProvider>
   );
 };
