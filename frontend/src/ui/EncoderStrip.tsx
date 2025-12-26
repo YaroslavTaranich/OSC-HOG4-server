@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import styles from './EncoderStrip.module.css';
 
 interface EncoderStripProps {
@@ -61,11 +61,11 @@ export const EncoderStrip: React.FC<EncoderStripProps> = ({ count, onStart, onCh
 
   const startInterval = (index: number) => {
     if (activeInterval.current[index] != null) return;
-  
+
     activeInterval.current[index] = window.setInterval(() => {
-        const norm = currentNorm.current[index] ?? 0;
-        const delta = norm * 0.08;
-        sendDelta(index, delta);
+      const norm = currentNorm.current[index] ?? 0;
+      const delta = norm * 0.08;
+      sendDelta(index, delta);
     }, 120);
   };
 

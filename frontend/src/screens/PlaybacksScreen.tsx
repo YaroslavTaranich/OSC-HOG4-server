@@ -13,28 +13,13 @@ const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(mi
 
 interface VerticalFaderProps {
   value: number; // 0..100
-  onStart: () => void;
   onChange: (value: number) => void;
-  onEnd: () => void;
 }
 
-const VerticalFader: React.FC<VerticalFaderProps> = ({ value, onStart, onChange, onEnd }) => {
+const VerticalFader: React.FC<VerticalFaderProps> = ({ value, onChange }) => {
   const trackRef = useRef<HTMLDivElement | null>(null);
   const activePointerId = useRef<number | null>(null);
-  const isActive = useRef(false);
   const wheelTimeout = useRef<number | null>(null);
-
-  const startInteraction = () => {
-    if (isActive.current) return;
-    isActive.current = true;
-    onStart();
-  };
-
-  const endInteraction = () => {
-    if (!isActive.current) return;
-    isActive.current = false;
-    onEnd();
-  };
 
   const setValueFromClientY = (clientY: number) => {
     const rect = trackRef.current?.getBoundingClientRect();
@@ -47,7 +32,6 @@ const VerticalFader: React.FC<VerticalFaderProps> = ({ value, onStart, onChange,
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     e.preventDefault();
-    startInteraction();
 
     activePointerId.current = e.pointerId;
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
@@ -70,14 +54,12 @@ const VerticalFader: React.FC<VerticalFaderProps> = ({ value, onStart, onChange,
     }
 
     activePointerId.current = null;
-    endInteraction();
   };
 
   /* -------- wheel -------- */
 
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     e.preventDefault();
-    startInteraction();
 
     const delta = -e.deltaY / 20;
     onChange(clamp(Math.round(value + delta), 0, 100));
@@ -85,10 +67,6 @@ const VerticalFader: React.FC<VerticalFaderProps> = ({ value, onStart, onChange,
     if (wheelTimeout.current) {
       clearTimeout(wheelTimeout.current);
     }
-
-    wheelTimeout.current = window.setTimeout(() => {
-      endInteraction();
-    }, 200);
   };
 
   return (
@@ -131,12 +109,6 @@ export const PlaybacksScreen: React.FC = () => {
   const handleSliderChange = (playback: number, value: number) => {
     setLevels((prev) => ({ ...prev, [playback]: value }));
     sendFader(playback, value);
-  };
-  const handleSliderStart = (playback: number) => {
-    send({ type: 'playback_fader_start', playback });
-  };
-  const handleSliderEnd = (playback: number) => {
-    send({ type: 'playback_fader_end', playback });
   };
 
   return (
@@ -217,12 +189,7 @@ export const PlaybacksScreen: React.FC = () => {
                   </HogButton>
 
                   <div className={styles.playbackSliderWrapper}>
-                    <VerticalFader
-                      value={level}
-                      onChange={(val) => handleSliderChange(n, val)}
-                      onStart={() => handleSliderStart(n)}
-                      onEnd={() => handleSliderEnd(n)}
-                    />
+                    <VerticalFader value={level} onChange={(val) => handleSliderChange(n, val)} />
                   </div>
 
                   <HogButton

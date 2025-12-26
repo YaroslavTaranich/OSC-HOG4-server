@@ -152,28 +152,12 @@ function handleClientMessage(ws, rawData) {
       break;
     }
 
-    case 'playback_fader_start': {
-      const playback = Number(data.playback);
-      if (!Number.isFinite(playback)) return;
-      const address = `/hog/hardware/fader/${playback}`;
-      sendOscMessage(address + '/z', [{ type: 'f', value: 1 }]);
-      break;
-    }
-
     case 'playback_fader': {
       const playback = Number(data.playback);
       const value = Number(data.value)
       if (!Number.isFinite(playback)) return;
       const address = `/hog/hardware/fader/${playback}`;
       sendOscMessage(address, [{ type: 'f', value: Math.floor(255 * value) }]);
-      break;
-    }
-
-    case 'playback_fader_end': {
-      const playback = Number(data.playback);
-      if (!Number.isFinite(playback)) return;
-      const address = `/hog/hardware/fader/${playback}`;
-      sendOscMessage(address + '/z', [{ type: 'f', value: 0 }]);
       break;
     }
 
